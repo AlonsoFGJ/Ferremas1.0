@@ -1,0 +1,33 @@
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl">GESTION DE CUENTA: {{ nombreUsuario }}</span>
+      <div class="headerderecha">        
+        <ion-button shape="round" class="headercerrar" href="/inicio">Volver a inicio</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">  
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

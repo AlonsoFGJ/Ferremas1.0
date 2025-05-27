@@ -1,0 +1,74 @@
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl">FERREMAS</span>
+      
+      <div class="header-buscador">
+        <ion-searchbar 
+          placeholder="Buscar productos..." 
+          class="custom-searchbar"
+          animated="true"
+          showCancelButton="focus"
+          debounce="500">
+        </ion-searchbar>
+      </div>
+      
+      <div class="headerderecha">
+        <ion-icon class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>            
+        <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="titulo-cartas">
+    <h1>Productos destacados</h1>
+  </div>  
+
+  <div class="card-grid">
+    <ion-card *ngFor="let producto of productos" class="producto-card">
+      <ion-img [src]="producto.imagen" class="producto-img"></ion-img>
+      <ion-card-header>
+        <ion-card-title class="producto-titulo">{{ producto.titulo }}</ion-card-title>
+        <ion-card-subtitle class="producto-sub">{{ producto.subtitulo }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <div class="info">
+    <div class="info-texto">
+      <h1>¿QUIENES SOMOS?</h1>
+      <h2>Somos una distribuidora con 4 decadas de experiencia especializada en ofrecer productos de ferretería y construcción de calidad. <br>
+        Ofreciendo un servicio agil de despacho y retiro, esperamos entregar el apoyo y materiales necesarios para tu empresa o tu proximo proyecto.<br>
+        <br>
+        Contamos con 4 sucursales en la Region Metropolitana y 3 sucursales en regiones, ofreciendo herramientas de todo tipo, pinturas, materiales eléctricos,
+        e incluso articulos de seguridad.
+        <br>
+        <h2 style="color: rgb(230, 98, 50); text-decoration: underline;">¡Calidad 99,9% asegurada! </h2></h2>
+    </div>
+    <div class="info-imagen">
+      <img src="../../../assets/icon/herramientas.png"/>
+    </div>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

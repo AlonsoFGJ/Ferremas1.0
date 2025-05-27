@@ -1,0 +1,56 @@
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl">FERREMAS</span>
+      
+      <div class="header-buscador">
+        <ion-searchbar 
+          placeholder="Buscar productos..." 
+          class="custom-searchbar"
+          animated="true"
+          showCancelButton="focus"
+          debounce="500">
+        </ion-searchbar>
+      </div>
+      
+      <div class="headerderecha">
+        <ion-icon class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>    
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="titulo-cartas">
+    <h1>Productos</h1>
+  </div>  
+
+  <div class="card-grid">
+    <ion-card *ngFor="let producto of productos" class="producto-card">
+      <ion-img [src]="producto.imagen" class="producto-img"></ion-img>
+      <ion-card-header>
+        <ion-card-title class="producto-titulo">{{ producto.titulo }}</ion-card-title>
+        <ion-card-subtitle class="producto-sub">{{ producto.subtitulo }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,62 @@
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>        
+    <div class="headerderecha">
+    <ion-button shape="round" class="headervolver" href="/iniciosin">Volver a Inicio</ion-button>
+    </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="cont_ini">
+    <span class="txt_ini">Iniciar sesión</span>    
+  </div>
+  <br>
+  <br>
+  <div class="formulario_ini">
+    <ion-input [(ngModel)]="usuario" label="Ingrese correo electrónico" label-placement="floating" fill="outline"></ion-input>
+    <br>
+    <br>
+    <br>
+    <br>
+    <ion-input [(ngModel)]="contrasenia" label="Ingrese contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
+    <br>
+    <br>
+    <br>    
+  </div>
+  <div class="boton_inicio">
+    <br>    
+    <ion-button size="large" (click)="iniciarSesion()">Ingresar</ion-button>    
+  </div>  
+  <div class="olvidar_contra">
+    <br>
+    <span (click)="IraCambiarContrasenna()">¿Olvidaste tu contraseña?</span>
+  </div>
+  <div class="crear_cuenta">
+    <br>    
+    <span (click)="IraCrearCuenta()">¿No tienes creada una cuenta?</span>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>
