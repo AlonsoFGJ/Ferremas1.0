@@ -17,7 +17,7 @@ export class InicioSesionPage implements OnInit {
     { usuario: 'admin', contrasenia: 'admin123' },
     { usuario: 'vendedor', contrasenia: 'vendedor123' },
     { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega123' },
+    { usuario: 'bodega', contrasenia: 'bodega1234' },
     { usuario: 'invitado', contrasenia: 'invitado123' }
   ];
 
