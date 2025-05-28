@@ -16,32 +16,58 @@
 <ion-content [fullscreen]="true" class="carrito-content">
   <div class="titulo-cartas">
     <h1>Carrito de compras</h1>
-  </div> 
+  </div>
 
   <div class="carrito-box">
-    <ion-accordion-group expand="none">
-      <ion-accordion *ngFor="let producto of carrito" class="carrito-item">
-        <ion-item slot="header" color="light">
-          <ion-avatar slot="start">
-            <img [src]="producto.imagen" />
-          </ion-avatar>
-          <ion-label>
-            <h2>{{ producto.titulo }}</h2>
-          </ion-label>
-        </ion-item>
 
-        <div class="accordion-content" slot="content">
-          <div class="detalle-producto">
-            <span><strong>Cantidad:</strong> {{ producto.cantidad }}</span>
-            <span><strong>Precio unitario:</strong> {{ producto.precio | currency:'CLP' }}</span>
-            <span><strong>Total:</strong> {{ producto.precio * producto.cantidad | currency:'CLP' }}</span>
-          </div>
+    <!-- Si el carrito está vacío -->
+    <div *ngIf="carrito.length === 0" class="carrito-vacio">
+      <p>Tu carrito está vacío.</p>
+    </div>
+
+    <!-- Lista de productos en formato boleta -->
+    <div *ngFor="let producto of carrito; let i = index" class="producto-boleta">
+      <div class="producto-header">
+        <img [src]="producto.imagen" alt="{{ producto.titulo }}" class="producto-img" />
+        <h3>{{ producto.titulo }}</h3>
+        <ion-button (click)="eliminarDelCarrito(i)" class="btn-eliminar">Eliminar</ion-button>
+      </div>
+
+      <div class="producto-detalles">
+        <div class="detalle-producto">
+          <label>Cantidad:</label>
+          <ion-input type="number" [value]="producto.cantidad" (ionChange)="actualizarCantidad(i, $event)" min="1"></ion-input>
         </div>
-      </ion-accordion>
-      <div class="boton-pagar">
-        <ion-button>Pagar carrito</ion-button>
-      </div>    
-    </ion-accordion-group>
+
+        <div class="detalle-producto">
+          <label>Precio unitario:</label>
+          <span>{{ producto.subtitulo }}</span>
+        </div>
+
+        <div class="detalle-producto">
+          <label>Total:</label>
+          <span>{{ producto.precio * producto.cantidad | currency:'CLP' }}</span>
+        </div>
+      </div>
+
+      <div *ngIf="producto.tipo === 'pintura'" class="color-selector">
+        <label><strong>Selecciona el color:</strong></label>
+        <ion-select [(ngModel)]="producto.colorSeleccionado" interface="popover">
+          <ion-select-option value="blanco">Blanco</ion-select-option>
+          <ion-select-option value="negro">Negro</ion-select-option>
+          <ion-select-option value="azul">Azul</ion-select-option>
+          <ion-select-option value="rojo">Rojo</ion-select-option>
+          <ion-select-option value="verde">Verde</ion-select-option>
+        </ion-select>
+      </div>
+
+      <hr class="separador" />
+    </div>
+
+    <!-- Botón pagar -->
+    <div class="boton-pagar" *ngIf="carrito.length > 0">
+      <ion-button expand="full">Pagar carrito ({{ calcularTotal() | currency:'CLP' }})</ion-button>
+    </div>
   </div>
 </ion-content>
 

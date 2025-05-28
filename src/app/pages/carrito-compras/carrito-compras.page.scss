@@ -68,7 +68,7 @@
   padding-right: 12px;
 }
 
-//CARRITOO///////////////////////////////////////////////
+//TITULO/////////////////////////////////////////////////
 .titulo-cartas {
   text-align: center;
   margin: 2rem 1rem 1rem;
@@ -83,33 +83,92 @@
   border-color: rgb(236, 98, 49);
   display: inline-block;
 }
-
-.caja-carrito{
-  display: flex;
-  flex-wrap: wrap;  
-  padding: 20px;
-  padding-top: 10px;
-  gap: 15px;
-  justify-content: center;  
-}
-
+//CARRITOO///////////////////////////////////////////////
 .carrito-content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 40px 20px;  
-  background: #f5f5f5; // opcional, para mejor contraste
+  padding: 16px;
 }
 
 .carrito-box {
-  
-  padding: 20px;
-  width: 100%;
-  max-width: 1500px; // ✅ limita el ancho máximo
-  margin: 0 auto; // ✅ centra horizontalmente
-  border: 2px solid #ffa500;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.titulo-cartas {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.producto-boleta {
+  margin-bottom: 16px;
+}
+
+.producto-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.producto-header h3{
+  font-size: xx-large;
+}
+
+.producto-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.producto-detalles {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  align-items: center;
+  font-size: 14px;
+  padding-left: 62px; /* Alineado con la imagen */
+}
+
+.detalle-producto label {
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.detalle-producto span {
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.detalle-producto ion-input {
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.separador {
+  margin-top: 12px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.boton-pagar {
+  margin-top: 20px;
+}
+
+.carrito-vacio {
+  text-align: center;
+  color: #888;
+}
+
+.color-selector {
+  margin-top: 8px;
+  padding-left: 62px;
+  font-size: x-large;
+
+  ion-select {
+    width: 100%;
+    max-width: 200px;
+  }
 }
 
 .boton-pagar ion-button{
@@ -127,24 +186,11 @@
     
 }
 
-.accordion-content {
-  padding: 10px 20px;  
-  font-size: 14px;
-  border-radius: 0px;
-  border-color: rgb(255, 255, 255);
-  border-style: solid;      
+.btn-eliminar {
+  --background: #ff4d4d;
+  --color: white;
+  font-size: 12px;
+  padding: 6px 10px;
+  height: 30px;
 }
 
-.detalle-producto {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 0;
-  font-size: 30px;
-  flex-wrap: wrap; // para que sea responsive en móviles
-}
-
-.detalle-producto span {
-  flex: 1;
-  min-width: 120px; // evita que colapsen
-}

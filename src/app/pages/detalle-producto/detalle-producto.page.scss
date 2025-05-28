@@ -1,0 +1,245 @@
+//HEADER///////////////////////////////////////////////////////////////
+.iconohead{
+    width: 150px;   
+    margin-left: 20px;
+    margin-right: 30px;     
+}
+
+.headercont{
+    display: flex;
+    align-items: center;
+    background-color: rgb(17, 17, 70);
+    width: 100%;
+    padding: 0 16px;
+    color: black;
+    flex-wrap: wrap;
+}
+
+.header{
+    display: flex;
+}
+
+.headerttl{
+    border-radius: 15px;
+    font-size: xx-large;    
+    margin-left: 20px;
+    background-color: rgb(236, 98, 49);
+    padding: 10px 100px;
+    display: flex;
+    white-space: nowrap;
+}
+
+.headerderecha{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 15px;
+}
+
+.headercarrito{
+    color: rgb(255, 255, 255);
+    display: flex;
+    margin-left: auto;
+    font-size: 50px;
+    cursor: pointer;    
+    padding-right: 20px;
+}
+
+.headercerrar{
+    border-radius: 15px;    
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 20px;
+    --background: rgb(236, 98, 49);
+}
+
+.header-buscador{
+    margin: auto;
+    display: flex;
+}
+
+//FOOTER///////////////////////////////////////////////////////////////
+.footer-row {
+  align-items: center;
+  height: 100%;
+  font-size: 14px;
+}
+
+.footertxt {
+  padding-left: 12px;
+}
+
+.footerinfo {
+  padding-right: 12px;
+}
+
+//CARTAAAAAA///////////////////////////////////////////////////
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;    
+}
+
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0 24px; // Evita que toque los bordes 
+  box-sizing: border-box;
+}
+
+.custom-card {
+  display: flex;
+  flex-direction: row;
+  background-color: #1e1e1e;
+  border: 2px solid #ff5e00;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 1800px; // Máximo para no exceder el centro en pantallas grandes
+  min-height: 70vh;  // Ocupa gran parte de la altura central
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.producto-img {
+  width: 500px;
+  height: auto;
+  object-fit: contain;
+  margin-right: 16px;
+}
+
+.producto-detalle {  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+}
+
+.producto-titulo {
+  font-size: 70px;
+  font-weight: bold;
+  color: white;
+  margin-top: px;  
+}
+
+.carta-precio {
+  padding-left: 100px;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  background-color: #1e1e1e;
+  border: 2px solid #ff5e00;
+  border-radius: 16px;
+  margin-top: 150px;
+  margin-bottom: 150px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  min-height: 100px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  gap: 12px; // Espacio entre elementos
+  padding-left: 60px; 
+  padding-right: 60px; 
+  margin-right: 50px;
+}
+
+.producto-sub {
+  font-size: 1.8rem;
+  color: #ff5e00;
+  font-weight: bold;
+  width: 200px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.advertencia {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 0;
+}
+
+.btn-carrito {
+  background-color: #ff5e00;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-carrito:hover {
+  background-color: #e64a00;
+}
+
+.product-description {
+  font-size: 30px;
+  color: #cccccc;
+  margin-top: 50px;
+}
+
+.info-contenido {
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+  width: 100%;
+}
+
+@media (max-width: 1664px) {
+
+  .info-contenido {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .custom-card {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .producto-img {
+    width: 100%;
+    max-width: 400px;
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+
+  .producto-detalle {
+    text-align: center;
+    padding: 0 16px;
+    margin-bottom: 24px;
+  }
+
+  .producto-titulo{
+    font-size: 2.5rem;
+  }
+
+
+  .producto-sub{
+    text-align: center;
+    justify-content: center;
+    align-items: center;    
+    width: 100%;
+  }
+
+  .product-description {
+    font-size: 1.2rem;
+  }
+
+  .card-container {
+    margin-left: 0 !important;
+  }
+
+  .carta-precio {
+    margin-top: 0;
+    margin-bottom: 0;    
+    margin: 0;
+  }
+}
+
