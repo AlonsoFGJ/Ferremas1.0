@@ -39,37 +39,47 @@ export class InicioSesionPage implements OnInit {
     }
   }
 
-  async iniciarSesion() {
-    const usuariosGuardados = JSON.parse(localStorage.getItem('usuariosRegistrados') || '[]');
-    
-    // Buscar el usuario en los registrados
-    const usuarioEncontrado = usuariosGuardados.find((u: any) => 
-      u.usuario === this.usuario && u.contrasenia === this.contrasenia
-    );
+async iniciarSesion() {
+  const usuariosGuardados = JSON.parse(localStorage.getItem('usuariosRegistrados') || '[]');
+  
+  // Buscar el usuario en los registrados
+  const usuarioEncontrado = usuariosGuardados.find((u: any) => 
+    u.usuario === this.usuario && u.contrasenia === this.contrasenia
+  );
 
-    if (usuarioEncontrado) {
-      const alert = await this.alertctrl.create({
-        header: 'Acceso permitido',
-        message: 'Inicio de sesión exitoso.',
-        buttons: [{
-          text: 'OK',
-          handler: () => {
-            // Guardar el usuario actual en sesión
-            localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
-            this.router.navigate(['/inicio'])
+  if (usuarioEncontrado) {
+    const alert = await this.alertctrl.create({
+      header: 'Acceso permitido',
+      message: 'Inicio de sesión exitoso.',
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          // Guardar el usuario actual en sesión
+          localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
+          
+          // Redirigir según el tipo de usuario
+          if (this.usuario === 'vendedor') {
+            this.router.navigate(['/inicio-vendedor']);
+          } else if (this.usuario === 'bodega') {
+            this.router.navigate(['/inicio-bodeguero']);
+          } else if (this.usuario === 'contador') {
+            this.router.navigate(['/inicio-contadorro']);
+          } else {
+            this.router.navigate(['/inicio']);
           }
-        }]
-      });
-      await alert.present();
-    } else {
-      const alert = await this.alertctrl.create({
-        header: 'Error',
-        message: 'Usuario o contraseña incorrectos.',
-        buttons: ['Intentar de nuevo'],
-      }); 
-      await alert.present();
-    }
+        }
+      }]
+    });
+    await alert.present();
+  } else {
+    const alert = await this.alertctrl.create({
+      header: 'Error',
+      message: 'Usuario o contraseña incorrectos.',
+      buttons: ['Intentar de nuevo'],
+    }); 
+    await alert.present();
   }
+}
 
   // Método para agregar o actualizar usuarios (puedes llamarlo desde otras páginas)
   actualizarUsuario(nuevoUsuario: string, nuevaContrasenia: string) {

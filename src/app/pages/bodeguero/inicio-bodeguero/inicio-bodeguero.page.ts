@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 
 import { AlertController } from '@ionic/angular';
 
-
 @Component({
-  selector: 'app-inicio-vendedor',
-  templateUrl: './inicio-vendedor.page.html',
-  styleUrls: ['./inicio-vendedor.page.scss'],
+  selector: 'app-inicio-bodeguero',
+  templateUrl: './inicio-bodeguero.page.html',
+  styleUrls: ['./inicio-bodeguero.page.scss'],
   standalone: false
 })
-export class InicioVendedorPage implements OnInit {
+export class InicioBodegueroPage implements OnInit {
   nombreUsuario: string = '';
 
   constructor(private router: Router, private alertctrl: AlertController) { }
@@ -22,7 +21,6 @@ export class InicioVendedorPage implements OnInit {
     this.nombreUsuario = user.usuario;
   }
 }
-
   productos = [
   {
     imagen: 'assets/icon/destornillador-electrico.png',

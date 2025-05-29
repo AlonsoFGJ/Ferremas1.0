@@ -72,9 +72,18 @@ const routes: Routes = [
     loadChildren: () => import('./pages/detalle-producto/detalle-producto.module').then( m => m.DetalleProductoPageModule)
   },
   {
+    path: 'inicio-bodeguero',
+    loadChildren: () => import('./pages/bodeguero/inicio-bodeguero/inicio-bodeguero.module').then( m => m.InicioBodegueroPageModule)
+  },
+  {
+    path: 'inicio-contadorro',
+    loadChildren: () => import('./pages/contador/inicio-contadorro/inicio-contadorro.module').then( m => m.InicioContadorroPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
   },
+
   
 
 ];

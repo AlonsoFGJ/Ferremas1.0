@@ -1,13 +1,72 @@
-<ion-header [translucent]="true">
+<ion-header class="header" [translucent]="true">
   <ion-toolbar>
-    <ion-title>despachos</ion-title>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl">FERREMAS</span>
+      
+      <div class="header-buscador">
+        <ion-searchbar 
+          placeholder="Buscar productos..." 
+          class="custom-searchbar"
+          animated="true"
+          showCancelButton="focus"
+          debounce="500">
+        </ion-searchbar>
+      </div>
+      
+      <div class="headerderecha">
+        <ion-button shape="round" class="headercerrar" href="/inicio-vendedor">Inicio</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/crud-productos">Modificar Productos</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">despachos</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="titulo-cartas">
+    <h1>Despacho Productos</h1>
+  </div>
+
+  <ion-list class="lista-despachos">
+    <!-- Ejemplo de item de despacho -->
+    <ion-item class="item-despacho" *ngFor="let despacho of despachos">
+      <ion-avatar slot="start">
+        <img [src]="despacho.producto.imagen">
+      </ion-avatar>
+      
+      <ion-label>
+        <h2>{{ despacho.producto.nombre }}</h2>
+        <p>Cantidad: {{ despacho.cantidad }}</p>
+        <p>Cliente: {{ despacho.cliente.nombre }}</p>
+        <p>Dirección: {{ despacho.direccion }}</p>
+      </ion-label>
+      
+      <ion-chip [color]="despacho.entregado ? 'success' : 'warning'" slot="end">
+        {{ despacho.entregado ? 'Entregado' : 'Pendiente' }}
+      </ion-chip>
+      
+      <ion-button fill="clear" slot="end" (click)="cambiarEstado(despacho)">
+        <ion-icon [name]="despacho.entregado ? 'close-circle' : 'checkmark-circle'"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

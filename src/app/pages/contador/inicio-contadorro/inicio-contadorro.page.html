@@ -18,7 +18,7 @@
       
       <div class="headerderecha">
         <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
-        <ion-button shape="round" class="headercerrar" href="/despachos">Despachos</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/entregas">Boleta Entrega</ion-button>
         <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
       </div>
     </div>
@@ -27,35 +27,35 @@
 
 <ion-content [fullscreen]="true">
   <div class="titulo-cartas">
-    <h1>Gestionar Productos</h1>
-  </div>  
+    <h1>Productos destacados</h1>
+  </div>
 
   <div class="card-grid">
-    <ion-card *ngFor="let producto of productos; let i = index" class="producto-card">
+    <ion-card *ngFor="let producto of productos" class="producto-card">
       <ion-img [src]="producto.imagen" class="producto-img"></ion-img>
       <ion-card-header>
         <ion-card-title class="producto-titulo">{{ producto.titulo }}</ion-card-title>
         <ion-card-subtitle class="producto-sub">{{ producto.subtitulo }}</ion-card-subtitle>
       </ion-card-header>
-      
-      <ion-card-content>
-        <div class="stock-info">
-          <ion-badge [color]="getStockColor(producto.stock)">
-            Stock: {{ producto.stock }}
-          </ion-badge>
-        </div>
-        
-        <ion-button 
-          expand="block" 
-          fill="outline" 
-          (click)="editarProducto(i)"
-          class="edit-button">
-          <ion-icon name="create-outline" slot="start"></ion-icon>
-          Editar
-        </ion-button>
-      </ion-card-content>
     </ion-card>
   </div>
+
+  <div class="info">
+    <div class="info-texto">
+      <h1>¿QUIENES SOMOS?</h1>
+      <h2>Somos una distribuidora con 4 decadas de experiencia especializada en ofrecer productos de ferretería y construcción de calidad. <br>
+        Ofreciendo un servicio agil de despacho y retiro, esperamos entregar el apoyo y materiales necesarios para tu empresa o tu proximo proyecto.<br>
+        <br>
+        Contamos con 4 sucursales en la Region Metropolitana y 3 sucursales en regiones, ofreciendo herramientas de todo tipo, pinturas, materiales eléctricos,
+        e incluso articulos de seguridad.
+        <br>
+        <h2 style="color: rgb(230, 98, 50); text-decoration: underline;">¡Calidad 99,9% asegurada! </h2></h2>
+    </div>
+    <div class="info-imagen">
+      <img src="../../../assets/icon/herramientas.png"/>
+    </div>
+  </div>
+
 </ion-content>
 
 <ion-footer>

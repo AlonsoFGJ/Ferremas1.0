@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 
 import { AlertController } from '@ionic/angular';
 
-
 @Component({
-  selector: 'app-inicio-vendedor',
-  templateUrl: './inicio-vendedor.page.html',
-  styleUrls: ['./inicio-vendedor.page.scss'],
+  selector: 'app-inicio-contadorro',
+  templateUrl: './inicio-contadorro.page.html',
+  styleUrls: ['./inicio-contadorro.page.scss'],
   standalone: false
 })
-export class InicioVendedorPage implements OnInit {
+export class InicioContadorroPage implements OnInit {
   nombreUsuario: string = '';
 
   constructor(private router: Router, private alertctrl: AlertController) { }
