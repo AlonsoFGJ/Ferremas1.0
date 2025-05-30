@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatGridListModule } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-iniciosin',
@@ -14,6 +13,20 @@ export class IniciosinPage implements OnInit {
 
   irAInicioSesion() {
     this.router.navigate(['/inicio-sesion']);
+  }
+
+  irAInicio() {
+    this.router.navigate(['/iniciosin']);
+  }
+
+  irAProductos() {
+    this.router.navigate(['/productos'])
+  }
+
+  verDetalle(producto: any) {
+    this.router.navigate(['/detalle-producto'], {
+      state: { producto }
+    });
   }
 
   productos = [

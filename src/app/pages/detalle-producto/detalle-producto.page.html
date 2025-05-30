@@ -4,7 +4,7 @@
       <div class="iconohead">
         <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
       </div>
-      <span class="headerttl">FERREMAS</span>
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>
       
       <div class="header-buscador">
         <ion-searchbar 
@@ -17,7 +17,7 @@
       </div>
       
       <div class="headerderecha">
-        <ion-icon class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>    
+        <ion-icon *ngIf="esInvitado()" class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>    
         <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
       </div>
     </div>
@@ -41,7 +41,7 @@
         <div class="carta-precio">
           <p class="producto-sub">{{ producto.subtitulo }}</p>
           <p class="aviso">*La cantidad es editable en el carrito</p>
-          <button ion-button class="btn-carrito" (click)="agregarAlCarrito()">Añadir al carrito</button> 
+          <button ion-button class="btn-carrito" (click)="agregarAlCarrito()" *ngIf="esInvitado()">Añadir al carrito</button> 
         </div>        
       </div>
     </div>

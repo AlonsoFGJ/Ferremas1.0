@@ -27,6 +27,7 @@
     padding: 10px 100px;
     display: flex;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .headerderecha{
@@ -46,6 +47,15 @@
 }
 
 .headercerrar{
+    border-radius: 15px;    
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 20px;
+    --background: rgb(236, 98, 49);
+}
+
+.headerini{
     border-radius: 15px;    
     color: black;
     font-size: 16px;

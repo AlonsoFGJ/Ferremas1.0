@@ -4,7 +4,7 @@
       <div class="iconohead">
         <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
       </div>
-      <span class="headerttl">FERREMAS</span>      
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>      
     <div class="headerderecha">      
     <ion-button shape="round" class="headercrear">Usuario: {{ nombreUsuario }}</ion-button>
     <ion-button shape="round" class="headercrear" href="/inicio">Cerrar sesión</ion-button>
@@ -36,7 +36,15 @@
       <div class="producto-detalles">
         <div class="detalle-producto">
           <label>Cantidad:</label>
-          <ion-input type="number" [value]="producto.cantidad" (ionChange)="actualizarCantidad(i, $event)" min="1"></ion-input>
+          <ion-input 
+            type="number" 
+            [value]="producto.cantidad" 
+            (ionChange)="actualizarCantidad(i, $event)" 
+            min="1" 
+            max="5"
+            [class.max-excedido]="producto.cantidad >= 5"
+          ></ion-input>
+          <span *ngIf="producto.cantidad >= 5" class="max-alert">(Máximo 5 unidades)</span>
         </div>
 
         <div class="detalle-producto">

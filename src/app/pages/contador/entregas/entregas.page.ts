@@ -11,6 +11,7 @@ import { AlertController } from '@ionic/angular';
 export class EntregasPage implements OnInit {
   nombreUsuario: string = '';
   fechaActual: Date = new Date();
+  usuarioActual: any = null;
   
   // Datos de ejemplo para las entregas
   entregas = [
@@ -18,6 +19,14 @@ export class EntregasPage implements OnInit {
     { nombre: 'María González', producto: 'Destornilladores', cantidad: 5, monto: 25000, entregado: true, pagado: true },
     { nombre: 'Carlos López', producto: 'Pintura', cantidad: 3, monto: 35000, entregado: true, pagado: false },
     { nombre: 'Ana Silva', producto: 'Clavos', cantidad: 100, monto: 5000, entregado: false, pagado: false }
+  ];
+
+  private usuariosPredefinidos = [
+    { usuario: 'admin', contrasenia: 'admin123' },
+    { usuario: 'vendedor', contrasenia: 'vendedor123' },
+    { usuario: 'contador', contrasenia: 'contador123' },
+    { usuario: 'bodega', contrasenia: 'bodega1234' },
+    { usuario: 'invitado', contrasenia: 'invitado123' }
   ];
 
   constructor(private router: Router, private alertctrl: AlertController) { }
@@ -29,6 +38,26 @@ export class EntregasPage implements OnInit {
       this.nombreUsuario = user.usuario;
     }
   }
+
+  irAInicio() {
+  const usuarioActual = localStorage.getItem('usuarioActual');
+  
+  if (usuarioActual) {
+    const usuario = JSON.parse(usuarioActual).usuario;
+    
+    if (usuario === 'vendedor') {
+      this.router.navigate(['/inicio-vendedor']);
+    } else if (usuario === 'bodega') {
+      this.router.navigate(['/inicio-bodeguero']);
+    } else if (usuario === 'contador') {
+      this.router.navigate(['/inicio-contadorro']);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+  } else {
+    this.router.navigate(['/iniciosin']);
+  }
+}
 
   ngOnInit() {
     const usuarioActual = localStorage.getItem('usuarioActual');

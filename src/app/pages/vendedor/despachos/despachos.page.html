@@ -4,7 +4,7 @@
       <div class="iconohead">
         <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
       </div>
-      <span class="headerttl">FERREMAS</span>
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>
       
       <div class="header-buscador">
         <ion-searchbar 
@@ -16,8 +16,7 @@
         </ion-searchbar>
       </div>
       
-      <div class="headerderecha">
-        <ion-button shape="round" class="headercerrar" href="/inicio-vendedor">Inicio</ion-button>
+      <div class="headerderecha">        
         <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
         <ion-button shape="round" class="headercerrar" href="/crud-productos">Modificar Productos</ion-button>
         <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>

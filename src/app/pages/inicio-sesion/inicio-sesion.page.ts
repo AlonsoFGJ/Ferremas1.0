@@ -9,6 +9,7 @@ import { AlertController } from '@ionic/angular';
   standalone: false
 })
 export class InicioSesionPage implements OnInit {
+  nombre: string = '';
   usuario: string = '';
   contrasenia: string = '';
   
@@ -42,9 +43,9 @@ export class InicioSesionPage implements OnInit {
 async iniciarSesion() {
   const usuariosGuardados = JSON.parse(localStorage.getItem('usuariosRegistrados') || '[]');
   
-  // Buscar el usuario en los registrados
+  // Buscar al usuario por nombre y contraseña
   const usuarioEncontrado = usuariosGuardados.find((u: any) => 
-    u.usuario === this.usuario && u.contrasenia === this.contrasenia
+    u.nombre === this.nombre && u.contrasenia === this.contrasenia
   );
 
   if (usuarioEncontrado) {
@@ -54,19 +55,11 @@ async iniciarSesion() {
       buttons: [{
         text: 'OK',
         handler: () => {
-          // Guardar el usuario actual en sesión
+          // Guardar en sesión
           localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
           
-          // Redirigir según el tipo de usuario
-          if (this.usuario === 'vendedor') {
-            this.router.navigate(['/inicio-vendedor']);
-          } else if (this.usuario === 'bodega') {
-            this.router.navigate(['/inicio-bodeguero']);
-          } else if (this.usuario === 'contador') {
-            this.router.navigate(['/inicio-contadorro']);
-          } else {
-            this.router.navigate(['/inicio']);
-          }
+          // Redirección
+          this.router.navigate(['/inicio']);
         }
       }]
     });
@@ -74,7 +67,7 @@ async iniciarSesion() {
   } else {
     const alert = await this.alertctrl.create({
       header: 'Error',
-      message: 'Usuario o contraseña incorrectos.',
+      message: 'Nombre o contraseña incorrectos.',
       buttons: ['Intentar de nuevo'],
     }); 
     await alert.present();
@@ -101,6 +94,8 @@ async iniciarSesion() {
     
     localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosGuardados));
   }
+
+  
 
   // Método para restablecer usuarios predefinidos
   restablecerUsuariosPredefinidos() {

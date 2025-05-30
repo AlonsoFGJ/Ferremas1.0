@@ -20,8 +20,12 @@ export class InicioVendedorPage implements OnInit {
   if (userData) {
     const user = JSON.parse(userData);
     this.nombreUsuario = user.usuario;
+    }
   }
-}
+
+  irAProductos() {
+    this.router.navigate(['/productos'])
+  }
 
   productos = [
   {

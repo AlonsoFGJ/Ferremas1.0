@@ -110,7 +110,7 @@
     flex-wrap: wrap;
 }
 
-//PRODUCTOOOS
+//PRODUCTOOOS////////////////////////////////////////////////////////////////
 .card-content {
   --background: rgb(248, 249, 250);
 }
@@ -130,6 +130,12 @@
   border: 2px solid rgb(236, 98, 49);
   flex: 1 1 300px;
   max-width: 100%;
+  cursor: pointer;
+}
+
+.producto-card:hover .producto-titulo{
+  text-decoration: underline;
+  text-decoration-line: underline;  
 }
 
 .producto-titulo{        
@@ -160,6 +166,19 @@
   border-style: solid;
   border-color: rgb(236, 98, 49);
   display: inline-block;
+}
+
+.ver-mas{
+  padding-bottom: 30px;
+  --background: rgb(236, 98, 49);
+  display: flex;
+  margin-left: auto;    
+}
+
+.cont-productos{
+  display: flex;
+  justify-content: flex-end; /* Esto alinea el contenido a la derecha */
+  padding-right: 20px; /* Espacio opcional desde el borde derecho */
 }
 
 @media screen and (max-width: 1150px) {

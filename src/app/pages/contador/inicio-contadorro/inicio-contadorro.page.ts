@@ -22,6 +22,10 @@ export class InicioContadorroPage implements OnInit {
   }
 }
 
+  irAProductos() {
+    this.router.navigate(['/productos'])
+  }
+
   productos = [
   {
     imagen: 'assets/icon/destornillador-electrico.png',

@@ -11,8 +11,39 @@ import { AlertController } from '@ionic/angular';
 })
 export class DespachosPage implements OnInit {
   nombreUsuario: string = '';
+  usuarioActual: any = null;
 
-  constructor(private router: Router, private alertctrl: AlertController) { }
+  private usuariosPredefinidos = [
+    { usuario: 'admin', contrasenia: 'admin123' },
+    { usuario: 'vendedor', contrasenia: 'vendedor123' },
+    { usuario: 'contador', contrasenia: 'contador123' },
+    { usuario: 'bodega', contrasenia: 'bodega1234' },
+    { usuario: 'invitado', contrasenia: 'invitado123' }
+  ];
+
+  constructor(private router: Router, private alertctrl: AlertController) { 
+    this.usuarioActual = localStorage.getItem('usuario');
+  }
+
+  irAInicio() {
+  const usuarioActual = localStorage.getItem('usuarioActual');
+  
+  if (usuarioActual) {
+    const usuario = JSON.parse(usuarioActual).usuario;
+    
+    if (usuario === 'vendedor') {
+      this.router.navigate(['/inicio-vendedor']);
+    } else if (usuario === 'bodega') {
+      this.router.navigate(['/inicio-bodeguero']);
+    } else if (usuario === 'contador') {
+      this.router.navigate(['/inicio-contadorro']);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+  } else {
+    this.router.navigate(['/iniciosin']);
+  }
+}
 
   ionViewWillEnter() {
   const userData = localStorage.getItem('usuarioActual');

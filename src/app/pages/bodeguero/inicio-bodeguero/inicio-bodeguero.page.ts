@@ -21,6 +21,11 @@ export class InicioBodegueroPage implements OnInit {
     this.nombreUsuario = user.usuario;
   }
 }
+
+  irAProductos() {
+    this.router.navigate(['/productos'])
+  }
+
   productos = [
   {
     imagen: 'assets/icon/destornillador-electrico.png',

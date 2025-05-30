@@ -9,8 +9,55 @@ import { Router } from '@angular/router';
 })
 export class ProductosPage implements OnInit {
   nombreUsuario: string = '';
+  usuarioActual: any = null;
 
-  constructor(private router: Router) { }
+  private usuariosPredefinidos = [
+    { usuario: 'admin', contrasenia: 'admin123' },
+    { usuario: 'vendedor', contrasenia: 'vendedor123' },
+    { usuario: 'contador', contrasenia: 'contador123' },
+    { usuario: 'bodega', contrasenia: 'bodega1234' },
+    { usuario: 'invitado', contrasenia: 'invitado123' }
+  ];
+
+constructor(private router: Router) {
+  const userData = localStorage.getItem('usuarioActual');
+  this.usuarioActual = userData ? JSON.parse(userData) : null;
+}
+
+irAInicio() {
+  const usuarioActual = localStorage.getItem('usuarioActual');
+  
+  if (usuarioActual) {
+    const usuario = JSON.parse(usuarioActual).usuario;
+    
+    if (usuario === 'vendedor') {
+      this.router.navigate(['/inicio-vendedor']);
+    } else if (usuario === 'bodega') {
+      this.router.navigate(['/inicio-bodeguero']);
+    } else if (usuario === 'contador') {
+      this.router.navigate(['/inicio-contadorro']);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+  } else {
+    this.router.navigate(['/iniciosin']);
+  }
+}
+
+esInvitado(): boolean {
+  const userData = localStorage.getItem('usuarioActual');
+  if (userData) {
+    const user = JSON.parse(userData);
+    return user.usuario === 'invitado';
+  }
+  return false;
+}
+
+  cerrarSesion() {
+    localStorage.removeItem('usuario');
+    this.usuarioActual = null;
+    // redirigir si quieres
+  }
 
   verDetalle(producto: any) {
     this.router.navigate(['/detalle-producto'], {
@@ -98,7 +145,7 @@ export class ProductosPage implements OnInit {
   },
 ];
 
-  ngOnInit() {
+  ngOnInit() {    
   }
 
 }
