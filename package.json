@@ -18,6 +18,7 @@
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
     "@angular/core": "^19.0.0",
+    "@angular/fire": "^19.2.0",
     "@angular/forms": "^19.0.0",
     "@angular/material": "^19.2.17",
     "@angular/platform-browser": "^19.0.0",
@@ -28,11 +29,14 @@
     "@capacitor/haptics": "7.0.1",
     "@capacitor/keyboard": "7.0.1",
     "@capacitor/status-bar": "7.0.1",
+    "@firebasegen/default-connector": "file:dataconnect-generated/js/default-connector",
     "@ionic/angular": "^8.0.0",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.0",
+    "@tanstack-query-firebase/angular": "^1.0.0",
+    "@tanstack/angular-query-experimental": "5.66.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.0",

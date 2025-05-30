@@ -1,0 +1,12 @@
+specVersion: "v1beta"
+serviceId: "Ferremas1.0"
+location: "us-central1"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "fdcdb"
+      cloudSql:
+        instanceId: "Ferremas1.0-fdc"
+      # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./connector"]

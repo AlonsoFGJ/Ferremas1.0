@@ -45,7 +45,7 @@ async iniciarSesion() {
   
   // Buscar al usuario por nombre y contraseña
   const usuarioEncontrado = usuariosGuardados.find((u: any) => 
-    u.nombre === this.nombre && u.contrasenia === this.contrasenia
+    u.usuario === this.usuario && u.contrasenia === this.contrasenia
   );
 
   if (usuarioEncontrado) {
