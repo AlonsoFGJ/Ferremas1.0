@@ -12,32 +12,69 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <br>
-  <br>
-  <br>
-  <br>
+  <br><br><br><br>
+
   <div class="cont_crear">
     <span class="txt_crear">Crear cuenta</span>    
   </div>
-  <br>
-  <br>
+  <br><br>
+
   <div class="formulario_crear">
-    <ion-input [(ngModel)]="nombre" label="Ingrese un nombre de usuario" label-placement="floating" fill="outline"></ion-input>    
-    <br>
-    <br>
-    <ion-input [(ngModel)]="correo" label="Ingrese correo electrónico" label-placement="floating" fill="outline"></ion-input>
-    <br>
-    <br>    
-    <ion-input [(ngModel)]="contra" label="Ingrese contraseña" label-placement="floating" fill="outline" type="password"></ion-input>
-    <br>
-    <br>
-    <ion-input [(ngModel)]="contra2" label="Ingrese contraseña nuevamente" label-placement="floating" fill="outline" type="password"></ion-input>    
+    <ion-grid>
+      <!-- Primera fila de nombres -->
+      <ion-row>
+        <ion-col>          
+          <ion-input [(ngModel)]="p_nombre" label="Primer Nombre*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="s_nombre" label="Segundo Nombre" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>      
+      <!-- Segunda fila de apellidos -->
+      <ion-row>
+        <ion-col>
+          <ion-input [(ngModel)]="p_apellido" label="Primer Apellido*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="s_apellido" label="Segundo Apellido" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+      <!-- Campo rut solo -->
+      <ion-row>
+        <ion-col size="12">
+          <ion-input [(ngModel)]="rut" label="RUT* (Sin puntos, con -)" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+      <!-- Dirección y correo -->
+      <ion-row>
+        <ion-col>
+          <ion-input [(ngModel)]="direccion" label="Direccion*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="correo" label="Correo Electrónico*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+      <!-- Contraseña y confirmación -->
+      <ion-row>
+        <ion-col>
+          <ion-input [(ngModel)]="contra" label="Contraseña*" label-placement="floating" fill="outline" type="password"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="contra2" label="Repetir Contraseña*" label-placement="floating" fill="outline" type="password"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
+
   <div class="boton_crear">
-    <br>
-    <br>
+    <span style="margin-top: 5px;">Los campos "*" son obligatorios</span>
+    <br><br>    
     <ion-button (click)="crearCuenta()" size="large">Crear</ion-button>
-  </div>  
+  </div>
 </ion-content>
 
 <ion-footer>

@@ -54,6 +54,34 @@
     --background: rgb(236, 98, 49);
 }
 
+//CONTENT//////////////////////////////////////////////////////////////
+.cont_modificar{    
+  text-align: center;
+  align-items: center;      
+  margin: 2rem 1rem 1rem;
+  margin-top: 0px;
+}
+
+.txt_modificar{    
+  font-size: 40px;
+  font-weight: bold;
+  padding: 10px 10px;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: rgb(236, 98, 49);
+  display: inline-block;
+}
+
+.formulario_modificar{
+    width: 40%;
+    margin: 0 auto;
+}
+
+.boton_crear{
+    margin: 0 auto;
+    text-align: center;    
+}
+
 //FOOTER///////////////////////////////////////////////////////////////
 .footer-row {
   align-items: center;

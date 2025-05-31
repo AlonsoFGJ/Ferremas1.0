@@ -12,6 +12,7 @@ import { CarritoService } from 'src/app/services/carrito.service';
 })
 export class DetalleProductoPage implements OnInit {
   producto: any;
+  usuarioActual: any = null;
 
   private usuariosPredefinidos = [
     { usuario: 'admin', contrasenia: 'admin123' },
@@ -29,6 +30,12 @@ export class DetalleProductoPage implements OnInit {
   IrACarritoCompras() {
     this.router.navigate(['/carrito-compras'])
   } 
+
+  Volver() {
+    this.router.navigate(['/iniciosin'])
+  }
+
+  
 
   irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
@@ -77,6 +84,7 @@ export class DetalleProductoPage implements OnInit {
   }
 
   ngOnInit() {
+    this.usuarioActual = localStorage.getItem('usuarioActual')
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.producto = navigation.extras.state['producto'];

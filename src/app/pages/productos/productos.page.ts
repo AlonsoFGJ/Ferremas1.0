@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+
 
 @Component({
   selector: 'app-productos',
@@ -10,6 +13,9 @@ import { Router } from '@angular/router';
 export class ProductosPage implements OnInit {
   nombreUsuario: string = '';
   usuarioActual: any = null;
+  terminoBusqueda: string = ''; // Nuevo: término de búsqueda
+  productosFiltrados: any[] = []; // Nuevo: productos filtrados
+
 
   private usuariosPredefinidos = [
     { usuario: 'admin', contrasenia: 'admin123' },
@@ -19,9 +25,10 @@ export class ProductosPage implements OnInit {
     { usuario: 'invitado', contrasenia: 'invitado123' }
   ];
 
-constructor(private router: Router) {
+constructor(private router: Router,) {
   const userData = localStorage.getItem('usuarioActual');
   this.usuarioActual = userData ? JSON.parse(userData) : null;
+  this.productosFiltrados = [...this.productos];
 }
 
 irAInicio() {
@@ -43,6 +50,20 @@ irAInicio() {
     this.router.navigate(['/iniciosin']);
   }
 }
+
+buscar(event: any) {
+    const texto = event.target.value.toLowerCase();
+
+    if (!texto) {
+      this.productosFiltrados = [...this.productos]; // Mostrar todos si no hay texto
+      return;
+    }
+
+    this.productosFiltrados = this.productos.filter(producto =>
+      producto.titulo.toLowerCase().includes(texto) ||
+      producto.subtitulo.toLowerCase().includes(texto)
+    );
+  }
 
 esInvitado(): boolean {
   const userData = localStorage.getItem('usuarioActual');
@@ -80,6 +101,9 @@ esInvitado(): boolean {
   IrACarritoCompras() {
     this.router.navigate(['/carrito-compras'])
   }
+
+  
+
 
   productos = [
   {

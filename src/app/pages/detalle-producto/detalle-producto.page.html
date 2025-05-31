@@ -18,7 +18,8 @@
       
       <div class="headerderecha">
         <ion-icon *ngIf="esInvitado()" class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>    
-        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+        <ion-button *ngIf="usuarioActual" shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+        <ion-button *ngIf="!usuarioActual" shape="round" class="headercerrar" (click)="Volver()">Volver</ion-button>
       </div>
     </div>
   </ion-toolbar>

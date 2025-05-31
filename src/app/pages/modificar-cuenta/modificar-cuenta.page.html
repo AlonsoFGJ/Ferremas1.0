@@ -13,8 +13,60 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">  
+<ion-content [fullscreen]="true">
+  <br><br><br><br>
 
+  <div class="cont_modificar">
+    <span class="txt_modificar">Modificar cuenta</span>    
+  </div>
+  <br><br>
+
+  <div class="formulario_modificar">
+    <ion-grid>
+      <!-- Primera fila de nombres -->
+      <ion-row>
+        <ion-col>          
+          <ion-input [(ngModel)]="p_nombre" label="Primer Nombre*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="s_nombre" label="Segundo Nombre" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>      
+      <!-- Segunda fila de apellidos -->
+      <ion-row>
+        <ion-col>
+          <ion-input [(ngModel)]="p_apellido" label="Primer Apellido*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="s_apellido" label="Segundo Apellido" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+      <!-- Campo rut solo -->
+      <ion-row>
+        <ion-col size="12">
+          <ion-input [(ngModel)]="rut" label="RUT* (Sin puntos, con -)" label-placement="floating" fill="outline" readonly></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+      <!-- Dirección y correo -->
+      <ion-row>
+        <ion-col>
+          <ion-input [(ngModel)]="direccion" label="Direccion*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input [(ngModel)]="correo" label="Correo Electrónico*" label-placement="floating" fill="outline"></ion-input>
+        </ion-col>
+      </ion-row>
+      <div style="margin-top: 5px;"></div>
+    </ion-grid>
+  </div>
+
+  <div class="boton_crear">    
+    <br><br>    
+    <ion-button size="large" (click)="actualizarUsuario()">Actualizar</ion-button>
+  </div>
 </ion-content>
 
 <ion-footer>

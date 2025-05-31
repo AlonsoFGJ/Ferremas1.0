@@ -12,7 +12,8 @@
           class="custom-searchbar"
           animated="true"
           showCancelButton="focus"
-          debounce="500">
+          debounce="500"
+          (ionInput)="buscar($event)">
         </ion-searchbar>
       </div>
       
@@ -33,7 +34,7 @@
   </div>  
 
   <div class="card-grid">
-    <ion-card *ngFor="let producto of productos" (click)="verDetalle(producto)" class="producto-card">
+    <ion-card *ngFor="let producto of productosFiltrados" (click)="verDetalle(producto)" class="producto-card">
       <ion-img [src]="producto.imagen" class="producto-img"></ion-img>
       <ion-card-header>
         <ion-card-title class="producto-titulo">{{ producto.titulo }}</ion-card-title>
