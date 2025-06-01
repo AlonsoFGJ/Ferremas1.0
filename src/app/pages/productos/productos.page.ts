@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, importProvidersFrom, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ApiproductoService} from 'src/app/services/apiproducto.service';
 
 
 
@@ -11,25 +12,40 @@ import { FormsModule } from '@angular/forms';
   standalone: false
 })
 export class ProductosPage implements OnInit {
+
+  productos: any[] = [];
+  
+
+
+
   nombreUsuario: string = '';
   usuarioActual: any = null;
   terminoBusqueda: string = ''; // Nuevo: término de búsqueda
   productosFiltrados: any[] = []; // Nuevo: productos filtrados
 
+  private mapeoTipos: { [key: string]: string } = {
+    'herr': 'Herramientas',
+    'pint': 'Pintura',
+    'mate': 'Materiales',
+    'mad': 'Madera',
+    'made': 'Madera'
+  };
 
-  private usuariosPredefinidos = [
-    { usuario: 'admin', contrasenia: 'admin123' },
-    { usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', contrasenia: 'invitado123' }
-  ];
 
-constructor(private router: Router,) {
+constructor(private router: Router, private productoService: ApiproductoService) {
+
   const userData = localStorage.getItem('usuarioActual');
-  this.usuarioActual = userData ? JSON.parse(userData) : null;
-  this.productosFiltrados = [...this.productos];
+  this.usuarioActual = userData ? JSON.parse(userData) : null;  
+  this.cargarProductos();
 }
+
+cargarProductos() {
+    this.productoService.obtenerProductos().subscribe(data => {
+      this.productos = data;
+      this.productosFiltrados = data; // ← Importante: inicializar aquí
+    });
+  }
+
 
 irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
@@ -52,18 +68,29 @@ irAInicio() {
 }
 
 buscar(event: any) {
-    const texto = event.target.value.toLowerCase();
+  const termino = event.target.value?.toLowerCase().trim();
 
-    if (!texto) {
-      this.productosFiltrados = [...this.productos]; // Mostrar todos si no hay texto
-      return;
-    }
+  if (!termino) {
+    this.productosFiltrados = [...this.productos];
+    return;
+  }
 
-    this.productosFiltrados = this.productos.filter(producto =>
-      producto.titulo.toLowerCase().includes(texto) ||
-      producto.subtitulo.toLowerCase().includes(texto)
+  // Busca si hay un tipo asociado al término (ej: "herr" -> "Herramientas")
+  const tipoAsociado = Object.entries(this.mapeoTipos).find(
+    ([clave]) => termino.includes(clave)
+  )?.[1];
+
+  if (tipoAsociado) {
+    // Filtra por tipo si hay una coincidencia
+    this.productosFiltrados = this.productos.filter(p => p.tipo === tipoAsociado);
+  } else {
+    // Búsqueda genérica por título o descripción
+    this.productosFiltrados = this.productos.filter(p =>
+      p.titulo.toLowerCase().includes(termino) ||
+      p.descripcion.toLowerCase().includes(termino)
     );
   }
+}
 
 esInvitado(): boolean {
   const userData = localStorage.getItem('usuarioActual');
@@ -105,7 +132,7 @@ esInvitado(): boolean {
   
 
 
-  productos = [
+  /*productos = [
   {
     imagen: 'assets/icon/cemento.png',
     titulo: 'Cemento Polpaico',
@@ -167,9 +194,17 @@ esInvitado(): boolean {
     subtitulo: '$690 c/u',
     precio: 690
   },
-];
+];*/
 
-  ngOnInit() {    
+  ngOnInit() { 
+    this.productoService.obtenerProductos().subscribe(
+      (res) => {
+        this.productos = res;
+        console.log('Productos:', res);
+      },
+      (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    );
   }
-
 }

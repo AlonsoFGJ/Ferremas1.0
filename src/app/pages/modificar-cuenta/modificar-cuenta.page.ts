@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AlertController } from '@ionic/angular';
+import { ApiusuarioService } from 'src/app/services/apiusuario.service';
 
 @Component({
   selector: 'app-modificar-cuenta',
@@ -21,18 +22,17 @@ export class ModificarCuentaPage implements OnInit {
   direccion: string = "";
   rut: string = "";
   correo: string = "";
-  contra: string = "";
-  contra2: string = "";
+  contra: string = "";  
 
   private usuariosPredefinidos = [
-    { usuario: 'admin', contrasenia: 'admin123' },
-    { usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', contrasenia: 'invitado123' }
+    { tipo_usuario: 'admin', contrasenia: 'admin123' },
+    { tipo_usuario: 'vendedor', contrasenia: 'vendedor123' },
+    { tipo_usuario: 'contador', contrasenia: 'contador123' },
+    { tipo_usuario: 'bodega', contrasenia: 'bodega1234' },
+    { tipo_usuario: 'invitado', contrasenia: 'invitado123' }
   ];
 
-  constructor(private router: Router, private alerctrl: AlertController) { }
+  constructor(private router: Router, private alerctrl: AlertController, private usuarioService: ApiusuarioService) { }
 
   async mostrarAlerta(mensaje: string) {
   const alert = await this.alerctrl.create({
@@ -49,54 +49,44 @@ export class ModificarCuentaPage implements OnInit {
 
   if (!userData) {
     console.error('No se encontró el usuario actual en localStorage');
+    this.mostrarAlerta('Error: No hay sesión iniciada.');
     return;
   }
 
   const usuarioActual = JSON.parse(userData);
+  const rutUsuario = usuarioActual.rut;
 
-  // Crear un nuevo objeto con los datos actualizados
-  const usuarioActualizado = {
-    ...usuarioActual,
+  // Creamos el objeto con los datos a actualizar
+  const datosActualizados = {
     p_nombre: this.p_nombre,
     s_nombre: this.s_nombre,
     p_apellido: this.p_apellido,
     s_apellido: this.s_apellido,
-    correo: this.correo,
     direccion: this.direccion,
-    rut: this.rut
-    // No incluimos "contra" ni "contra2", así que se mantiene la original
+    correo: this.correo,
+    // No incluimos 'contra' aquí, salvo que también quieras actualizarla
   };
 
-  // 1. Actualizamos 'usuarioActual'
-  localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
+  // Llamamos al servicio para actualizar en el backend
+  this.usuarioService.actualizarUsuario(rutUsuario, datosActualizados).subscribe(
+    (res: any) => {
+      console.log('Usuario actualizado en el servidor:', res);
 
-  // 2. Actualizamos también en 'usuariosRegistrados'
-  const usuariosRegistradosJSON = localStorage.getItem('usuariosRegistrados');
+      // Actualizamos el usuario en localStorage
+      const usuarioActualizado = {
+        ...usuarioActual,
+        ...datosActualizados
+      };
 
-  if (usuariosRegistradosJSON) {
-    let usuariosRegistrados = JSON.parse(usuariosRegistradosJSON);
+      localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
 
-    // Buscamos el índice del usuario actual usando el campo 'rut' como clave única
-    const index = usuariosRegistrados.findIndex(
-      (u: any) => u.rut === usuarioActualizado.rut
-    );
-
-    if (index !== -1) {
-      // Reemplazamos el usuario antiguo por el actualizado
-      usuariosRegistrados[index] = usuarioActualizado;
-
-      // Guardamos de nuevo la lista completa
-      localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosRegistrados));
-      console.log('Usuario actualizado en usuariosRegistrados.');
-    } else {
-      console.warn('No se encontró el usuario en usuariosRegistrados usando su RUT');
+      this.mostrarAlerta('Los datos han sido actualizados correctamente.');
+    },
+    (error) => {
+      console.error('Error al actualizar el usuario en el servidor', error);
+      this.mostrarAlerta('Hubo un error al guardar los cambios. Inténtalo más tarde.');
     }
-  } else {
-    console.warn('No se encontraron usuarios registrados en localStorage');
-  }
-
-  // Mostrar alerta al usuario
-  this.mostrarAlerta('Los datos han sido actualizados correctamente');
+  );
 }
 
   irAInicio() {
@@ -125,14 +115,31 @@ export class ModificarCuentaPage implements OnInit {
   const userData = localStorage.getItem('usuarioActual');
   if (userData) {
     const user = JSON.parse(userData);
+    const rutUsuario = user.rut;
 
-    this.p_nombre = user.p_nombre || "";
-    this.s_nombre = user.s_nombre || "";
-    this.p_apellido = user.p_apellido || "";
-    this.s_apellido = user.s_apellido || "";
-    this.rut = user.rut || "";
-    this.direccion = user.direccion || "";
-    this.correo = user.correo || "";
+    // Llamamos al servicio para obtener los datos más recientes desde la API
+    this.usuarioService.obtenerUsuario(rutUsuario).subscribe(
+      (res: any) => {
+        console.log('Datos del usuario desde API:', res);
+
+        // Asignamos los valores a los campos del formulario
+        this.p_nombre = res.p_nombre || '';
+        this.s_nombre = res.s_nombre || '';
+        this.p_apellido = res.p_apellido || '';
+        this.s_apellido = res.s_apellido || '';
+        this.direccion = res.direccion || '';
+        this.correo = res.correo || '';
+        this.rut = res.rut || '';
+
+      },
+      (error) => {
+        console.error('Error al obtener usuario por RUT', error);
+        this.mostrarAlerta('No se pudieron cargar los datos del usuario.');
+      }
+    );
+  } else {
+    console.warn('No hay usuario logueado en localStorage');
+    this.router.navigate(['/inicio-sesion']);
   }
 }
 

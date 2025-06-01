@@ -54,8 +54,8 @@ export class CarritoComprasPage implements OnInit {
   }
 
   ngOnInit() {
-    this.carritoService.carrito$.subscribe(carrito => {
-      this.carrito = [...carrito];
+    this.carritoService.carrito$.subscribe(data => {
+      this.carrito = data;
     });
   }
 

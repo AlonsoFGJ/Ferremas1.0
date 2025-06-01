@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ApiusuarioService } from 'src/app/services/apiusuario.service';
+
+
+
 
 @Component({
   selector: 'app-inicio-sesion',
@@ -9,21 +13,15 @@ import { AlertController } from '@ionic/angular';
   standalone: false
 })
 export class InicioSesionPage implements OnInit {
-  nombre: string = '';
-  usuario: string = '';
-  contrasenia: string = '';
+  usuarios: any[] = [];
+
+  nombre: string = '';  
+  contra: string = '';
   correo: string = '';
   usuario_aut: string = '';
   // Usuarios predefinidos
-  private usuariosPredefinidos = [
-    { usuario: 'admin', correo: 'admin@gmail.com', contrasenia: 'admin123' },
-    { usuario: 'vendedor', correo: 'vendedor@gmail.com', contrasenia: 'vendedor123' },
-    { usuario: 'contador', correo: 'contador@gmail.com', contrasenia: 'contador123' },
-    { usuario: 'bodega', correo: 'bodega@gmail.com', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', correo: 'invitado@gmail.com', contrasenia: 'invitado123' }
-  ];
 
-  constructor(private router: Router, private alertctrl: AlertController) { }
+  constructor(private router: Router, private alertctrl: AlertController, private usuarioService: ApiusuarioService) { }
 
   IraCambiarContrasenna() {
     this.router.navigate(['/cambiar-contrasenna'])
@@ -34,57 +32,76 @@ export class InicioSesionPage implements OnInit {
   }
 
   ngOnInit() {
-  // Eliminamos siempre 'usuarioActual', independiente de si existe o no
-  localStorage.removeItem('usuarioActual');
+  this.usuarioService.obtenerUsuarios().subscribe(
+      (res) => {
+        this.usuarios = res;
+        console.log('Usuarios:', res);
+      },
+      (error) => {
+        console.error('Error al obtener usuarios', error);
+      }
+    );
+    
 
-  // Cargar los usuarios predefinidos solo si 'usuariosRegistrados' NO existe
-  const usuariosGuardados = localStorage.getItem('usuariosRegistrados');
 
-  if (!usuariosGuardados) {
-    // Si no hay usuarios registrados, cargamos los predefinidos
-    localStorage.setItem('usuariosRegistrados', JSON.stringify(this.usuariosPredefinidos));
-    console.log('Usuarios predefinidos cargados por primera vez.');
-  } else {
-    console.log('Ya existen usuarios registrados. No se modifican.');
-  }
+  
+
+  
 }
 
 async iniciarSesion() {
-  const usuariosGuardados = JSON.parse(localStorage.getItem('usuariosRegistrados') || '[]');
-
-  
-  // Buscar al usuario por correo y contraseña
-  const usuarioEncontrado = usuariosGuardados.find((u: any) => 
-    u.correo === this.correo && u.contrasenia === this.contrasenia
+  // Buscar el usuario por correo y contraseña
+  const usuarioEncontrado = this.usuarios.find(u => 
+    u.correo === this.correo && u.contra === this.contra
   );
 
   if (usuarioEncontrado) {
-  // Asignar el usuario encontrado a una variable para usarlo luego
-  this.usuario_aut = usuarioEncontrado.usuario; // <-- Esto puedes usar si necesitas guardarlo como propiedad
+    // Guardar usuario en localStorage
+    const datosUsuario = {
+    rut: usuarioEncontrado.rut,
+    nombre: usuarioEncontrado.p_nombre,
+    tipo_usuario: usuarioEncontrado.tipo_usuario
+  };
 
-  const alert = await this.alertctrl.create({
-    header: 'Acceso permitido',
-    message: 'Inicio de sesión exitoso.',
-    buttons: [{
-      text: 'OK',
-      handler: () => {
-        // Guardar en localStorage (sesión)
-        localStorage.setItem('usuarioActual', JSON.stringify(usuarioEncontrado));
+  // Guardar como JSON en localStorage
+  localStorage.setItem('usuarioActual', JSON.stringify(datosUsuario));
 
-        // Usamos directamente el usuario encontrado para la redirección
-        if (usuarioEncontrado.usuario === 'vendedor') {
-          this.router.navigate(['/inicio-vendedor']);
-        } else if (usuarioEncontrado.usuario === 'bodega') {
-          this.router.navigate(['/inicio-bodeguero']);
-        } else if (usuarioEncontrado.usuario === 'contador') {
-          this.router.navigate(['/inicio-contadorro']); // Revisa la ruta, parece haber un typo en tu código original
-        } else {
-          this.router.navigate(['/inicio']);
+    // Mostrar mensaje de éxito
+    const alert = await this.alertctrl.create({
+      header: 'Acceso permitido',
+      message: 'Inicio de sesión exitoso.',
+      buttons: [{
+        text: 'OK',
+        handler: () => {
+          // Redirigir según tipo de usuario
+          switch (usuarioEncontrado.tipo_usuario) {
+            case 'vendedor':
+              this.router.navigate(['/inicio-vendedor']);
+              break;
+            case 'bodega':
+              this.router.navigate(['/inicio-bodeguero']);
+              break;
+            case 'contador':
+              this.router.navigate(['/inicio-contadorro']); // <-- corregido typo
+              break;
+            case 'admin':
+              this.router.navigate(['/inicio-admin']);
+              break;
+            default:
+              this.router.navigate(['/inicio']);
+          }
         }
-      }
-    }]
-  });
-  await alert.present();
-    }
+      }]
+    });
+    await alert.present();
+
+  } else {
+    const alert = await this.alertctrl.create({
+      header: 'Acceso denegado',
+      message: 'Correo o contraseña incorrectos.',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
+}
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiproductoService} from 'src/app/services/apiproducto.service';
 
 @Component({
   selector: 'app-iniciosin',
@@ -9,7 +10,9 @@ import { Router } from '@angular/router';
 })
 export class IniciosinPage implements OnInit {
 
-  constructor(private router: Router) { }
+  productos: any[] = [];
+
+  constructor(private router: Router, private productoService: ApiproductoService) { }
 
   irAInicioSesion() {
     this.router.navigate(['/inicio-sesion']);
@@ -29,7 +32,7 @@ export class IniciosinPage implements OnInit {
     });
   }
 
-  productos = [
+  /*productos = [
   {
     imagen: 'assets/icon/destornillador-electrico.png',
     titulo: 'Destornillador Electrico',
@@ -50,11 +53,19 @@ export class IniciosinPage implements OnInit {
     titulo: 'Yeso 25kg',
     subtitulo: '$8.990'
   }
-];
+];*/
 
 
-  ngOnInit() {
-    const usuarioActual = localStorage.removeItem('usuarioActual');
+  ngOnInit() { 
+    this.productoService.obtenerProductos().subscribe(
+      (res) => {
+        this.productos = res.slice(0, 5);
+        console.log('Productos:', res);
+      },
+      (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    );
   }
 
 }

@@ -30,17 +30,17 @@
     <div class="custom-card">
       <div class="info-contenido">
           <!-- Imagen del producto -->
-        <img [src]="producto.imagen" [alt]="producto.titulo" class="producto-img" />
+        <img [src]="'assets/icon/' + producto.titulo + '.png'" [alt]="producto.titulo" class="producto-img" />
 
         <!-- Detalles del producto -->
         <div class="producto-detalle">
           <h2 class="producto-titulo">{{ producto.titulo }}</h2>    
-          <p class="product-description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat, vero inventore aut voluptate reprehenderit dolor! Quia ratione non vero ipsam mollitia quisquam, accusamus expedita, reiciendis inventore saepe hic voluptas atque!</p>
+          <p class="product-description">{{ producto.descripcion }}</p>
         </div>
       </div>     
       <div class="card-container"  style="margin-left: 200px;">
         <div class="carta-precio">
-          <p class="producto-sub">{{ producto.subtitulo }}</p>
+          <p class="producto-sub">{{ producto.precio | currency:'CLP' }}</p>
           <p class="aviso">*La cantidad es editable en el carrito</p>
           <button ion-button class="btn-carrito" (click)="agregarAlCarrito()" *ngIf="esInvitado()">Añadir al carrito</button> 
         </div>        

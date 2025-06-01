@@ -139,6 +139,12 @@
   border: 2px solid rgb(236, 98, 49);
   flex: 1 1 300px;
   max-width: 100%;
+  cursor: pointer;
+}
+
+.producto-card:hover .producto-titulo{
+  text-decoration: underline;
+  text-decoration-line: underline;  
 }
 
 .producto-titulo{        

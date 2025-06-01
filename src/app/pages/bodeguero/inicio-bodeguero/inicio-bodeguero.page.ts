@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AlertController } from '@ionic/angular';
+import { ApiproductoService } from 'src/app/services/apiproducto.service';
 
 @Component({
   selector: 'app-inicio-bodeguero',
@@ -10,15 +11,22 @@ import { AlertController } from '@ionic/angular';
   standalone: false
 })
 export class InicioBodegueroPage implements OnInit {
+  productos: any[] = [];
+
   nombreUsuario: string = '';
 
-  constructor(private router: Router, private alertctrl: AlertController) { }
+  constructor(private router: Router, private alertctrl: AlertController, private productoService: ApiproductoService) { }
 
   ionViewWillEnter() {
   const userData = localStorage.getItem('usuarioActual');
   if (userData) {
     const user = JSON.parse(userData);
-    this.nombreUsuario = user.usuario;
+
+    if (user.nombre) {
+      this.nombreUsuario = user.nombre;
+    } else if (user.usuario) {
+      this.nombreUsuario = user.p_nombre;
+    }
   }
 }
 
@@ -26,30 +34,18 @@ export class InicioBodegueroPage implements OnInit {
     this.router.navigate(['/productos'])
   }
 
-  productos = [
-  {
-    imagen: 'assets/icon/destornillador-electrico.png',
-    titulo: 'Destornillador Electrico',
-    subtitulo: '$80.990'
-  },
-  {
-    imagen: 'assets/icon/escalera.png',
-    titulo: 'Escalera multipropósito',
-    subtitulo: '$74.990'
-  },
-  {
-    imagen: 'assets/icon/pintura.png',
-    titulo: 'Pintura Multi-superficies',
-    subtitulo: '$124.990'
-  },
-  {
-    imagen: 'assets/icon/yeso25.png',
-    titulo: 'Yeso 25kg',
-    subtitulo: '$8.990'
-  }
-];
-
   ngOnInit() {
+    this.productoService.obtenerProductos().subscribe(
+      (res) => {
+        this.productos = res.slice(0, 5);
+        console.log('Productos:', res);
+      },
+      (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    );
+
+
     const usuarioActual = localStorage.getItem('usuarioActual');
   if (!usuarioActual) {
     // Redirigir a /iniciosin si no hay sesión activa

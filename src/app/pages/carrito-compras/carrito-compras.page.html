@@ -28,7 +28,7 @@
     <!-- Lista de productos en formato boleta -->
     <div *ngFor="let producto of carrito; let i = index" class="producto-boleta">
       <div class="producto-header">
-        <img [src]="producto.imagen" alt="{{ producto.titulo }}" class="producto-img" />
+        <img [src]="'assets/icon/' + producto.titulo + '.png'" alt="{{ producto.titulo }}" class="producto-img" />
         <h3>{{ producto.titulo }}</h3>
         <ion-button (click)="eliminarDelCarrito(i)" class="btn-eliminar">Eliminar</ion-button>
       </div>
@@ -49,7 +49,7 @@
 
         <div class="detalle-producto">
           <label>Precio unitario:</label>
-          <span>{{ producto.subtitulo }}</span>
+          <span>{{ producto.precio | currency:'CLP' }}</span>
         </div>
 
         <div class="detalle-producto">

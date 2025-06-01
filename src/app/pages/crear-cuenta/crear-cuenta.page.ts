@@ -9,13 +9,13 @@ import { AlertController } from '@ionic/angular';
   standalone: false
 })
 export class CrearCuentaPage implements OnInit {
-  usuario: string = "";
+  rut: string = "";
+  tipo_usuario: string = "";
   p_nombre: string = "";
   s_nombre: string = "";
   p_apellido: string = "";
   s_apellido: string = "";
   direccion: string = "";
-  rut: string = "";
   correo: string = "";
   contra: string = "";
   contra2: string = "";
@@ -126,7 +126,7 @@ export class CrearCuentaPage implements OnInit {
 
   // Crear nuevo usuario
   const nuevoUsuario = {
-    usuario: usuarioAsignado,
+    tipo_usuario: usuarioAsignado,
     p_nombre: this.p_nombre,
     s_nombre: this.s_nombre,
     p_apellido: this.p_apellido,
@@ -134,7 +134,7 @@ export class CrearCuentaPage implements OnInit {
     direccion: this.direccion,
     rut: this.rut,
     correo: this.correo,
-    contrasenia: this.contra
+    contra: this.contra
   };
 
   // Verificar si el correo ya está registrado
