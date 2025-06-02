@@ -28,6 +28,8 @@ interface Pedido {
   standalone: false
 })
 export class CrudPedidoPage implements OnInit {
+  productos: any[] = [];
+
   nombreUsuario: string = '';
   pedidos: Pedido[] = [];
   pedidosFiltrados: Pedido[] = [];
@@ -208,4 +210,27 @@ export class CrudPedidoPage implements OnInit {
     
     await alert.present();
   }
+
+irAInicio() {
+  const usuarioActual = localStorage.getItem('usuarioActual');
+  
+  if (usuarioActual) {
+    const usuario = JSON.parse(usuarioActual).tipo_usuario;
+    
+    if (usuario === 'vendedor') {
+      this.router.navigate(['/inicio-vendedor']);
+    } else if (usuario === 'bodega') {
+      this.router.navigate(['/inicio-bodeguero']);
+    } else if (usuario === 'contador') {
+      this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
+    } else {
+      this.router.navigate(['/inicio']);
+    }
+  } else {
+    this.router.navigate(['/iniciosin']);
+  }
 }
+}
+

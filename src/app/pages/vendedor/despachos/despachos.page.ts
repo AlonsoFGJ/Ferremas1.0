@@ -13,23 +13,16 @@ export class DespachosPage implements OnInit {
   nombreUsuario: string = '';
   usuarioActual: any = null;
 
-  private usuariosPredefinidos = [
-    { usuario: 'admin', contrasenia: 'admin123' },
-    { usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', contrasenia: 'invitado123' }
-  ];
 
   constructor(private router: Router, private alertctrl: AlertController) { 
     this.usuarioActual = localStorage.getItem('usuario');
   }
 
-  irAInicio() {
+irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
-    const usuario = JSON.parse(usuarioActual).usuario;
+    const usuario = JSON.parse(usuarioActual).tipo_usuario;
     
     if (usuario === 'vendedor') {
       this.router.navigate(['/inicio-vendedor']);
@@ -37,6 +30,8 @@ export class DespachosPage implements OnInit {
       this.router.navigate(['/inicio-bodeguero']);
     } else if (usuario === 'contador') {
       this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
     } else {
       this.router.navigate(['/inicio']);
     }

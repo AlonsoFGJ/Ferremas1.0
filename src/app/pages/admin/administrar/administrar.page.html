@@ -1,0 +1,156 @@
+<ion-header class="header" [translucent]="true">
+  <ion-toolbar>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>
+      
+      <div class="headerderecha">
+        <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="admin-container">
+    <div class="titulo-cartas">
+      <h1>Administrar Usuarios</h1>
+    </div>
+
+    <div class="admin-actions">
+      <ion-button class="admin-button" (click)="openCreateModal()">Crear Nuevo Usuario</ion-button>
+      <ion-searchbar class="admin-search" placeholder="Buscar usuario..." [(ngModel)]="searchTerm" (ionChange)="filterUsers()"></ion-searchbar>
+    </div>
+
+    <div class="users-table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>RUT</th>
+            <th>Correo</th>
+            <th>Dirección</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td class="mayus">{{ user.tipo_usuario }}</td>
+            <td>{{ user.p_nombre }} {{ user.s_nombre || '' }}</td>
+            <td>{{ user.p_apellido }} {{ user.s_apellido || '' }}</td>
+            <td>{{ user.rut }}</td>
+            <td>{{ user.correo }}</td>
+            <td>{{ user.direccion }}</td>
+            <td class="actions-cell">
+              <ion-button fill="clear" (click)="openEditModal(user)">
+                <ion-icon name="create-outline"></ion-icon>
+              </ion-button>
+              <ion-button fill="clear" color="danger" (click)="confirmDelete(user)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal para crear/editar usuario -->
+    <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>{{ isEditing ? 'Editar Usuario' : 'Crear Usuario' }}</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpen(false)">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <form [formGroup]="userForm" (ngSubmit)="handleSubmit()">
+            <ion-item>
+              <ion-label position="stacked">Tipo de Usuario</ion-label>
+              <ion-select formControlName="tipo_usuario" interface="popover">
+                <ion-select-option value="invitado">Invitado</ion-select-option>
+                <ion-select-option value="vendedor">Vendedor</ion-select-option>                
+                <ion-select-option value="bodega">Bodeguero</ion-select-option>
+                <ion-select-option value="contador">Contador</ion-select-option>
+              </ion-select>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Primer Nombre</ion-label>
+              <ion-input formControlName="p_nombre" type="text" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Segundo Nombre (Opcional)</ion-label>
+              <ion-input formControlName="s_nombre" type="text"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Primer Apellido</ion-label>
+              <ion-input formControlName="p_apellido" type="text" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Segundo Apellido (Opcional)</ion-label>
+              <ion-input formControlName="s_apellido" type="text"></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">RUT</ion-label>
+              <ion-input formControlName="rut" type="text" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Correo</ion-label>
+              <ion-input formControlName="correo" type="email" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="stacked">Dirección</ion-label>
+              <ion-input formControlName="direccion" type="text" required></ion-input>
+            </ion-item>
+
+            <!-- Solo mostrar campo de contraseña cuando se crea un nuevo usuario -->
+            <div *ngIf="!isEditing">
+              <ion-item>
+                <ion-label position="stacked">Contraseña</ion-label>
+                <ion-input formControlName="contra" type="password" required></ion-input>
+              </ion-item>
+
+              <ion-item>
+                <ion-label position="stacked">Confirmar Contraseña</ion-label>
+                <ion-input formControlName="contra2" type="password" required></ion-input>
+              </ion-item>
+            </div>
+
+            <ion-button type="submit" expand="block" class="submit-button">
+              {{ isEditing ? 'Actualizar Usuario' : 'Crear Usuario' }}
+            </ion-button>
+          </form>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

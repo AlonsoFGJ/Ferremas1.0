@@ -1,10 +1,11 @@
-.iconohead{
+/* HEADER STYLES */
+.iconohead {
     width: 150px;   
     margin-left: 20px;
     margin-right: 30px;     
 }
 
-.headercont{
+.headercont {
     display: flex;
     align-items: center;
     background-color: rgb(17, 17, 70);
@@ -14,11 +15,11 @@
     flex-wrap: wrap;
 }
 
-.header{
+.header {
     display: flex;
 }
 
-.headerttl{
+.headerttl {
     border-radius: 15px;
     font-size: xx-large;    
     margin-left: 20px;
@@ -26,78 +27,184 @@
     padding: 10px 100px;
     display: flex;
     white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: scale(1.02);
+    }
 }
 
-.headerderecha{
+.headerderecha {
     display: flex;
     align-items: center;
     margin-left: auto;
     gap: 15px;
 }
 
-.headercarrito{
-    color: rgb(255, 255, 255);
-    display: flex;
-    margin-left: auto;
-    font-size: 50px;
-    cursor: pointer;    
-    padding-right: 20px;
-}
 
-.headerinicio{
-    border-radius: 15px;    
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 10px 15px;       
-    --background: rgb(236, 98, 49);         
-}
-
-.headercrear{
-    border-radius: 15px;    
-    color: black;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 10px 20px;
-    --background: rgb(236, 98, 49);
-}
-
+/* FOOTER STYLES */
 .footer-row {
-  align-items: center;
-  height: 100%;
-  font-size: 14px;
+    align-items: center;
+    height: 100%;
+    font-size: 14px;
 }
 
 .footertxt {
-  padding-left: 12px;
+    padding-left: 12px;
 }
 
 .footerinfo {
-  padding-right: 12px;
+    padding-right: 12px;
 }
 
+/* FORM STYLES */
+.titulo-cartas {
+    text-align: center;
+    margin: 2rem 1rem 1rem;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        padding: 10px 10px;
+        border-radius: 20px;
+        border-style: solid;
+        border-color: rgb(236, 98, 49);
+        display: inline-block;
+    }
+}
+
+.form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 0 16px;
+}
+
+.form-container ion-card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgb(0, 0, 0);
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-3px);
+    }
+}
+
+.form-container ion-card-header {
+    background-color: rgb(37, 34, 34);
+    border-bottom: 1px solid #eee;
+}
+
+.form-container ion-card-title {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+}
+
+.form-container ion-card-subtitle {
+    color: rgb(236, 98, 49);
+}
+
+.submit-button {
+    --background: rgb(236, 98, 49);
+    --background-activated: rgb(200, 80, 40);
+    --background-hover: rgb(220, 90, 45);
+    margin-top: 20px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* Input styles */
+.form-container ion-item {
+    --highlight-color-focused: rgb(17, 17, 70);
+    --border-color: #ddd;
+    margin-bottom: 15px;
+}
+
+.form-container ion-input {
+    --padding-start: 10px;
+}
+
+/* Error messages */
+ion-note[slot="error"] {
+    color: var(--ion-color-danger);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Toast styles */
+ion-toast {
+    --background: rgb(17, 17, 70);
+    --color: white;
+    --border-radius: 8px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.usuarioEncontrado {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* RESPONSIVE STYLES */
 @media screen and (max-width: 1150px) {
-  .headerttl {
-    display: none;
-  }
+    .headerttl {
+        display: none;
+    }
 
-  .iconohead{
-    margin: auto;
-    justify-content: center;
-  }
+    .iconohead {
+        margin: auto;
+        justify-content: center;
+    }
 
-  .headercont {    
-    padding: 10px;
-  }
+    .headercont {    
+        padding: 10px;
+    }
 
-  .headerderecha{
-    justify-content: center;
-  }
+    .headerderecha {
+        justify-content: center;
+    }
 }
 
 @media screen and (max-width: 450px) {
-  .headercrear{
-    display: none;
-  }
-
+    .headercrear {
+        display: none;
+    }
 }
+
+@media screen and (max-width: 768px) {
+    .form-container {
+        padding: 0 8px;
+    }
+    
+    .form-container ion-card {
+        margin: 10px 0;
+    }
+
+    .headerttl {
+        padding: 10px 30px;
+        font-size: x-large;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .titulo-cartas h1 {
+        font-size: 1.5rem;
+        padding: 8px;
+    }
+
+    .form-container {
+        padding: 0;
+    }
+}
+
+.texto_rut{
+    margin-bottom: 25px;
+}
+

@@ -21,6 +21,11 @@ export class InicioPage implements OnInit {
     this.productosFiltrados = [...this.productos];
   }
 
+  cerrarSesion() {
+  localStorage.removeItem('usuarioActual');
+  this.router.navigate(['/iniciosin']);
+}
+
   ionViewWillEnter() {
   const userData = localStorage.getItem('usuarioActual');
   if (userData) {

@@ -80,12 +80,17 @@ const routes: Routes = [
     loadChildren: () => import('./pages/contador/inicio-contadorro/inicio-contadorro.module').then( m => m.InicioContadorroPageModule)
   },
   {
+    path: 'inicio-admin',
+    loadChildren: () => import('./pages/admin/inicio-admin/inicio-admin.module').then( m => m.InicioAdminPageModule)
+  },
+  {
+    path: 'administrar',
+    loadChildren: () => import('./pages/admin/administrar/administrar.module').then( m => m.AdministrarPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/notfound/notfound.module').then( m => m.NotfoundPageModule)
-  },
-
-  
-
+  }
 ];
 
 @NgModule({

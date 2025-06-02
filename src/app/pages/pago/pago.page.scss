@@ -1,0 +1,190 @@
+/* HEADER */
+.header {
+  width: 100%;
+}
+
+.headercont {
+  display: flex;
+  align-items: center;
+  background-color: rgb(17, 17, 70);
+  width: 100%;
+  padding: 10px 20px;
+  color: white;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.iconohead {
+  width: 150px;
+  margin: 0 20px;
+}
+
+.headerttl {
+  border-radius: 15px;
+  font-size: xx-large;
+  background-color: rgb(236, 98, 49);
+  padding: 10px 30px;
+  cursor: pointer;
+  color: black;
+  margin: 0 20px;
+  text-align: center;
+}
+
+/* CONTENT */
+ion-content {
+  --background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titulo-cartas {
+  text-align: center;
+  justify-content: center;
+
+}
+
+.titulo-cartas h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 10px 30px;
+  border-radius: 20px;
+  border: 2px solid rgb(236, 98, 49);
+  display: inline-block;
+  margin-bottom: 20px;
+  color: black;
+  background-color: rgba(236, 98, 49, 0.2);
+}
+
+.dolar-valor {
+  margin: 20px 0;
+}
+
+.dolar-valor p {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid rgb(236, 98, 49);
+  background-color: rgba(236, 98, 49, 0.2);
+  color: black;
+}
+
+/* CARDS */
+ion-card {
+  width: 100%;
+  max-width: 800px;
+  margin: 20px auto;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+ion-card-header {
+  background-color: rgb(17, 17, 70);
+  color: white;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+ion-card-title {
+  color: white;
+  font-size: 1.5rem;
+}
+
+ion-card-content {
+  padding: 20px;
+  background-color: white;
+}
+
+.transfer-info p {
+  margin: 10px 0;
+  color: #333;
+}
+
+.btn-whatsapp {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #25D366;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.btn-whatsapp:hover {
+  background-color: #128C7E;
+}
+
+.paypal-container {
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* FOOTER */
+ion-footer {
+  background-color: rgb(17, 17, 70);
+  color: white;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.footertxt, .footerinfo {
+  color: white;
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 768px) {
+  .headercont {
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .iconohead {
+    margin: 10px 0;
+  }
+  
+  .headerttl {
+    margin: 10px 0;
+    padding: 10px 20px;
+  }
+  
+  ion-card {
+    margin: 15px;
+  }
+  
+  .footer-row {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footertxt, .footerinfo {
+    width: 100%;
+    text-align: center;
+    padding: 5px 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .headerttl {
+    font-size: large;
+    padding: 8px 15px;
+  }
+  
+  .titulo-cartas h1 {
+    font-size: 1.5rem;
+    padding: 8px 20px;
+  }
+  
+  .dolar-valor p {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+}

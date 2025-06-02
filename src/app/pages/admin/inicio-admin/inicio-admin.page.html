@@ -4,7 +4,7 @@
       <div class="iconohead">
         <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
       </div>
-      <span class="headerttl" href="/inicio">FERREMAS</span>
+      <span class="headerttl">FERREMAS</span>
       
       <div class="header-buscador">
         <ion-searchbar 
@@ -12,15 +12,14 @@
           class="custom-searchbar"
           animated="true"
           showCancelButton="focus"
-          debounce="500"
-          (ionInput)="buscar($event)">
+          debounce="500">
         </ion-searchbar>
       </div>
       
       <div class="headerderecha">
-        <ion-icon class="headercarrito" (click)="IrACarritoCompras()" name="cart-outline"></ion-icon>            
         <ion-button shape="round" class="headercerrar" href="/modificar-cuenta">{{ nombreUsuario || 'Editar Usuario' }}</ion-button>
-        <ion-button shape="round" class="headercerrar" (click)="cerrarSesion()">Cerrar sesión</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/administrar">Administrar Trabajadores</ion-button>
+        <ion-button shape="round" class="headercerrar" href="/iniciosin">Cerrar sesión</ion-button>
       </div>
     </div>
   </ion-toolbar>
@@ -29,10 +28,10 @@
 <ion-content [fullscreen]="true">
   <div class="titulo-cartas">
     <h1>Productos destacados</h1>
-  </div>  
+  </div>
 
   <div class="card-grid">
-    <ion-card *ngFor="let producto of productos" class="producto-card" (click)="verDetalle(producto)">
+    <ion-card *ngFor="let producto of productos" class="producto-card">
       <ion-img [src]="'assets/icon/' + producto.titulo + '.png'" class="producto-img"></ion-img>
       <ion-card-header>
         <ion-card-title class="producto-titulo">{{ producto.titulo }}</ion-card-title>

@@ -39,11 +39,11 @@ export class EntregasPage implements OnInit {
     }
   }
 
-  irAInicio() {
+irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
-    const usuario = JSON.parse(usuarioActual).usuario;
+    const usuario = JSON.parse(usuarioActual).tipo_usuario;
     
     if (usuario === 'vendedor') {
       this.router.navigate(['/inicio-vendedor']);
@@ -51,6 +51,8 @@ export class EntregasPage implements OnInit {
       this.router.navigate(['/inicio-bodeguero']);
     } else if (usuario === 'contador') {
       this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
     } else {
       this.router.navigate(['/inicio']);
     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ApiproductoService } from 'src/app/services/apiproducto.service';
 
 @Component({
   selector: 'app-crud-productos',
@@ -9,25 +10,29 @@ import { AlertController } from '@ionic/angular';
   standalone: false
 })
 export class CrudProductosPage implements OnInit {
+  productos: any[] = [];
   nombreUsuario: string = '';
   usuarioActual: any = null;
   editingIndex: number | null = null;
   tempStock: number = 0;
   tempPrecio: number = 0;
+  productosFiltrados: any[] = []; 
+  terminoBusqueda: string = ''; 
 
-  private usuariosPredefinidos = [
-    { usuario: 'admin', contrasenia: 'admin123' },
-    { usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', contrasenia: 'invitado123' }
-  ];
+  private mapeoTipos: { [key: string]: string } = {
+    'herr': 'Herramientas',
+    'pint': 'Pintura',
+    'mate': 'Materiales',
+    'mad': 'Madera',
+    'made': 'Madera'
+  };
 
-  irAInicio() {
+
+irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
-    const usuario = JSON.parse(usuarioActual).usuario;
+    const usuario = JSON.parse(usuarioActual).tipo_usuario;
     
     if (usuario === 'vendedor') {
       this.router.navigate(['/inicio-vendedor']);
@@ -35,6 +40,8 @@ export class CrudProductosPage implements OnInit {
       this.router.navigate(['/inicio-bodeguero']);
     } else if (usuario === 'contador') {
       this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
     } else {
       this.router.navigate(['/inicio']);
     }
@@ -43,8 +50,17 @@ export class CrudProductosPage implements OnInit {
   }
 }
 
-  constructor(private router: Router, private alertCtrl: AlertController) { 
-    this.usuarioActual = localStorage.getItem('usuario');
+  constructor(private router: Router, private alertCtrl: AlertController, private productoService: ApiproductoService) { 
+    this.usuarioActual = localStorage.getItem('tipo_usuario');
+    
+    this.cargarProductos();
+  }
+
+  cargarProductos() {
+    this.productoService.obtenerProductos().subscribe(data => {
+      this.productos = data;
+      this.productosFiltrados = data; // ← Importante: inicializar aquí
+    });
   }
 
   ionViewWillEnter() {
@@ -55,91 +71,20 @@ export class CrudProductosPage implements OnInit {
     }
   }
 
-
-
-  productos = [
-    {
-      imagen: 'assets/icon/cemento.png',
-      titulo: 'Cemento Polpaico',
-      subtitulo: '$4.350',
-      precio: 4350,
-      stock: 50
-    },
-    {
-      imagen: 'assets/icon/destornillador-paleta.png',
-      titulo: 'Destornillador punta paleta',
-      subtitulo: '$4.990',
-      precio: 4990,
-      stock: 30
-    },
-    {
-      imagen: 'assets/icon/plancha.png',
-      titulo: 'Plancha OSB 11mm',
-      subtitulo: '$19.670',
-      precio: 19670,
-      stock: 15
-    },
-    {
-      imagen: 'assets/icon/yeso25.png',
-      titulo: 'Yeso 25kg',
-      subtitulo: '$8.990',
-      precio: 8990,
-      stock: 20
-    },
-    {
-      imagen: 'assets/icon/destornillador-electrico.png',
-      titulo: 'Destornillador Electrico',
-      subtitulo: '$80.990',
-      precio: 80990,
-      stock: 8
-    },
-    {
-      imagen: 'assets/icon/pintura.png',
-      titulo: 'Pintura Multi-superficies',
-      subtitulo: '$124.990',
-      precio: 124990,
-      stock: 12,
-      tipo: 'pintura'
-    },
-    {
-      imagen: 'assets/icon/plancha-volca.png',
-      titulo: 'Plancha Volcanita 10 mm',
-      subtitulo: '$6.590',
-      precio: 6590,
-      stock: 25
-    },
-    {
-      imagen: 'assets/icon/escalera.png',
-      titulo: 'Escalera multipropósito',
-      subtitulo: '$74.990',
-      precio: 74990,
-      stock: 5
-    },
-    {
-      imagen: 'assets/icon/yeso5.png',
-      titulo: 'Yeso 5kg',
-      subtitulo: '$2.590',
-      precio: 2590,
-      stock: 40
-    },
-    {
-      imagen: 'assets/icon/yeso1.png',
-      titulo: 'Yeso 1kg',
-      subtitulo: '$690',
-      precio: 690,
-      stock: 60
-    }
-  ];
-
   ngOnInit() {
-    const usuarioActual = localStorage.getItem('usuarioActual');
-    if (!usuarioActual) {
-      this.router.navigate(['/iniciosin']);
-      return;
-    }
+    this.productoService.obtenerProductos().subscribe(
+      (res) => {
+        this.productos = res;
+        console.log('Productos:', res);
+      },
+      (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    );
   }
+  
 
-async editarProducto(index: number) {
+async actualizarProducto(index: number) {
   const producto = this.productos[index];
   this.editingIndex = index;
   this.tempStock = producto.stock;
@@ -175,8 +120,11 @@ async editarProducto(index: number) {
       {
         text: 'Guardar',
         handler: async (data) => {
-          // Validación de valores negativos
-          if (data.stock < 0 || data.precio < 0) {
+          const nuevoStock = Number(data.stock);
+          const nuevoPrecio = Number(data.precio);
+
+          // Validaciones
+          if (nuevoStock < 0 || nuevoPrecio < 0) {
             const errorAlert = await this.alertCtrl.create({
               header: 'Error',
               message: `No se permiten valores negativos para ${producto.titulo}`,
@@ -185,17 +133,45 @@ async editarProducto(index: number) {
             await errorAlert.present();
             return false;
           }
-          
-          // Validación de otros valores
-          if (data.stock >= 0 && data.precio > 0) {
-            producto.stock = Number(data.stock);
-            producto.precio = Number(data.precio);
+
+          if (nuevoStock >= 0 && nuevoPrecio > 0) {
+            // Actualiza localmente
+            producto.stock = nuevoStock;
+            producto.precio = nuevoPrecio;
             producto.subtitulo = `$${producto.precio.toLocaleString('es-CL')}`;
             if (producto.titulo.includes('c/u')) {
               producto.subtitulo += ' c/u';
             }
-            return true;
+
+            // 🔁 Actualiza en la base de datos
+            try {
+              await this.productoService.actualizarParcial(producto.id_producto, {
+                titulo: producto.titulo,
+                descripcion: producto.descripcion ?? '', // fallback en caso de que no exista
+                stock: producto.stock,
+                precio: producto.precio,
+                tipo: producto.tipo ?? '' // opcionalmente maneja campos no definidos
+              }).toPromise();
+
+              const successAlert = await this.alertCtrl.create({
+                header: 'Éxito',
+                message: 'Producto actualizado exitosamente.',
+                buttons: ['OK']
+              });
+              await successAlert.present();
+
+              return true;              
+            } catch (error) {
+              const errorAlert = await this.alertCtrl.create({
+                header: 'Error',
+                message: `Error al actualizar producto en el servidor.`,
+                buttons: ['OK']
+              });
+              await errorAlert.present();
+              return false;
+            }
           }
+
           return false;
         }
       }
@@ -204,10 +180,4 @@ async editarProducto(index: number) {
 
   await alert.present();
 }
-
-  getStockColor(stock: number): string {
-    if (stock === 0) return 'danger';
-    if (stock < 5) return 'warning';
-    return 'success';
-  }
 }

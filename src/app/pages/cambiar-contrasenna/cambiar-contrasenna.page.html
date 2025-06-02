@@ -4,22 +4,95 @@
       <div class="iconohead">
         <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
       </div>
-      <span class="headerttl">FERREMAS</span>      
-    <div class="headerderecha">
-    
-    
-
-    <ion-icon class="headercarrito" name="cart-outline"></ion-icon>
-
-    <ion-button shape="round" class="headerinicio">Iniciar sesión</ion-button>
-
-    <ion-button shape="round" class="headercrear" href="/crear-cuenta">Crear cuenta</ion-button>
-    </div>
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>      
+      <div class="headerderecha">    
+      </div>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div class="titulo-cartas">
+    <h1>Cambiar Contraseña</h1>
+  </div>
+
+  <div class="form-container">
+    <ion-card>
+      <ion-card-content>
+        <form [formGroup]="contrasenaForm" (ngSubmit)="buscarUsuario()">
+          <ion-item>
+            <ion-label position="floating" class="texto_rut">RUT del Usuario</ion-label>
+            <ion-input 
+              type="text" 
+              formControlName="rut"
+              placeholder="Ej: 12345678-9">
+            </ion-input>
+            <ion-note slot="error" *ngIf="contrasenaForm.get('rut')?.errors?.['required']">
+              RUT es requerido
+            </ion-note>
+            <ion-note slot="error" *ngIf="contrasenaForm.get('rut')?.errors?.['pattern']">
+              Formato inválido (Ej: 12345678-9)
+            </ion-note>
+          </ion-item>
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            [disabled]="!contrasenaForm.get('rut')?.valid"
+            class="submit-button">
+            Buscar Usuario
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="usuarioEncontrado" class="usuarioEncontrado">
+      <ion-card-header>
+        <ion-card-title class="nomuser">{{usuarioEncontrado.p_nombre}} {{usuarioEncontrado.p_apellido}}</ion-card-title>
+        <ion-card-subtitle>RUT: {{usuarioEncontrado.rut}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <form [formGroup]="contrasenaForm" (ngSubmit)="cambiarContrasena()">
+          <ion-item>
+            <ion-label position="floating">Nueva Contraseña</ion-label>
+            <ion-input 
+              type="password" 
+              formControlName="nuevaContrasena">
+            </ion-input>
+            <ion-note slot="error" *ngIf="contrasenaForm.get('nuevaContrasena')?.errors?.['required']">
+              Contraseña es requerida
+            </ion-note>
+            <ion-note slot="error" *ngIf="contrasenaForm.get('nuevaContrasena')?.errors?.['minlength']">
+              Mínimo 6 caracteres
+            </ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Confirmar Contraseña</ion-label>
+            <ion-input 
+              type="password" 
+              formControlName="confirmarContrasena">
+            </ion-input>
+            <ion-note slot="error" *ngIf="contrasenaForm.hasError('mismatch')">
+              Las contraseñas no coinciden
+            </ion-note>
+          </ion-item>
+          <ion-button 
+            type="submit" 
+            expand="block" 
+            [disabled]="!contrasenaForm.valid"
+            class="submit-button">
+            Cambiar Contraseña
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-toast
+      [isOpen]="mostrarMensaje"
+      [message]="mensajeToast || ''"
+      [duration]="3000"
+      (didDismiss)="setOpen(false)">
+    </ion-toast>
+  </div>
 </ion-content>
 
 <ion-footer>

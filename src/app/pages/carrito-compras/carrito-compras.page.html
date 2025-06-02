@@ -57,24 +57,12 @@
           <span>{{ producto.precio * producto.cantidad | currency:'CLP' }}</span>
         </div>
       </div>
-
-      <div *ngIf="producto.tipo === 'pintura'" class="color-selector">
-        <label><strong>Selecciona el color:</strong></label>
-        <ion-select [(ngModel)]="producto.colorSeleccionado" interface="popover">
-          <ion-select-option value="blanco">Blanco</ion-select-option>
-          <ion-select-option value="negro">Negro</ion-select-option>
-          <ion-select-option value="azul">Azul</ion-select-option>
-          <ion-select-option value="rojo">Rojo</ion-select-option>
-          <ion-select-option value="verde">Verde</ion-select-option>
-        </ion-select>
-      </div>
-
       <hr class="separador" />
     </div>
 
     <!-- Botón pagar -->
     <div class="boton-pagar" *ngIf="carrito.length > 0">
-      <ion-button expand="full">Pagar carrito ({{ calcularTotal() | currency:'CLP' }})</ion-button>
+      <ion-button expand="full" (click)="pagarCarrito()">Pagar carrito ({{ calcularTotal() | currency:'CLP' }})</ion-button>
     </div>
   </div>
 </ion-content>

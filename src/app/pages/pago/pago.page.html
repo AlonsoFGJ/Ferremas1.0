@@ -1,13 +1,77 @@
-<ion-header [translucent]="true">
+<ion-header class="header" [translucent]="true">
   <ion-toolbar>
-    <ion-title>pago</ion-title>
+    <div class="headercont">
+      <div class="iconohead">
+        <ion-img src="../../../assets/icon/logosinfondo.png"></ion-img>
+      </div>
+      <span class="headerttl" (click)="irAInicio()">FERREMAS</span>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">pago</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <div class="titulo-cartas" style="padding: 16px; justify-content: center; align-items: center;">
+    <h1>Carrito de compras</h1>
+    <div class="dolar-valor">
+      <p>
+      Valor dólar actual: {{ valorDolar | currency:'USD' }}
+    </p>
+    </div>
+  </div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Resumen de Pago</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Total en CLP:</strong> {{ totalCLP | currency:'CLP' }}</p>
+      <p><strong>Equivalente en dólares:</strong> {{ convertirPesosADolares(totalCLP) | currency:'USD':'symbol':'1.2-2' }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Realizar Transferencia</ion-card-title>   
+    </ion-card-header>
+    <ion-card-content>
+      <div class="transfer-info">
+        <p><strong>Nombre:</strong> GABRIEL EXEQUIEL VALENCIA MUNOZ</p>
+        <p><strong>RUT:</strong> 21.243.823-5</p>
+        <p><strong>Banco:</strong> BancoEstado</p>
+        <p><strong>Tipo:</strong> Cuenta VISTA</p>
+        <p><strong>N° Cuenta:</strong> 00021243823</p>
+      </div>
+      <a href="https://wa.me/56948055472" target="_blank" class="btn-whatsapp">
+        Enviar comprobante vía WhatsApp
+      </a>
+    </ion-card-content>
+      
+      
+  </ion-card>
+
+  <ion-card>
+  <ion-card-header>
+    <ion-card-title>Realizar Pago</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="paypal-container">
+    <div id="paypal-button-container"></div>
+  </ion-card-content>
+</ion-card>
 </ion-content>
+
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="footer-row">
+        <ion-col size="6" class="footertxt">
+          © FERREMAS 2025
+        </ion-col>
+        <ion-col size="6" class="footerinfo" style="text-align: right;">
+          Contacto: +569 98940264
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

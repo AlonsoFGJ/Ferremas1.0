@@ -24,13 +24,6 @@ export class ModificarCuentaPage implements OnInit {
   correo: string = "";
   contra: string = "";  
 
-  private usuariosPredefinidos = [
-    { tipo_usuario: 'admin', contrasenia: 'admin123' },
-    { tipo_usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { tipo_usuario: 'contador', contrasenia: 'contador123' },
-    { tipo_usuario: 'bodega', contrasenia: 'bodega1234' },
-    { tipo_usuario: 'invitado', contrasenia: 'invitado123' }
-  ];
 
   constructor(private router: Router, private alerctrl: AlertController, private usuarioService: ApiusuarioService) { }
 
@@ -89,11 +82,11 @@ export class ModificarCuentaPage implements OnInit {
   );
 }
 
-  irAInicio() {
+irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
-    const usuario = JSON.parse(usuarioActual).usuario;
+    const usuario = JSON.parse(usuarioActual).tipo_usuario;
     
     if (usuario === 'vendedor') {
       this.router.navigate(['/inicio-vendedor']);
@@ -101,6 +94,8 @@ export class ModificarCuentaPage implements OnInit {
       this.router.navigate(['/inicio-bodeguero']);
     } else if (usuario === 'contador') {
       this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
     } else {
       this.router.navigate(['/inicio']);
     }

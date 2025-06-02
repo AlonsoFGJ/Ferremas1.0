@@ -32,7 +32,7 @@ export class DetalleProductoPage implements OnInit {
 
   
 
-  irAInicio() {
+irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
@@ -44,6 +44,8 @@ export class DetalleProductoPage implements OnInit {
       this.router.navigate(['/inicio-bodeguero']);
     } else if (usuario === 'contador') {
       this.router.navigate(['/inicio-contadorro']);
+    } else if (usuario === 'admin') {
+      this.router.navigate(['/inicio-admin']);
     } else {
       this.router.navigate(['/inicio']);
     }
@@ -64,7 +66,7 @@ export class DetalleProductoPage implements OnInit {
   const userData = localStorage.getItem('usuarioActual');
   if (userData) {
     const user = JSON.parse(userData);
-    return user.tipo_usuario === 'invitado'; // ✅ Aquí estaba el error
+    return user.tipo_usuario === 'invitado';
   }
   return false;
 }

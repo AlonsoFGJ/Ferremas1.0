@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { CambiarContrasennaPageRoutingModule } from './cambiar-contrasenna-routing.module';
-import { CambiarContrasennaPage } from './cambiar-contrasenna.page';
-
+import { AdministrarPageRoutingModule } from './administrar-routing.module';
+import { AdministrarPage } from './administrar.page';
 
 @NgModule({
   imports: [
@@ -12,8 +11,8 @@ import { CambiarContrasennaPage } from './cambiar-contrasenna.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    CambiarContrasennaPageRoutingModule
+    AdministrarPageRoutingModule
   ],
-  declarations: [CambiarContrasennaPage]
+  declarations: [AdministrarPage]
 })
-export class CambiarContrasennaPageModule {}
+export class AdministrarPageModule {}

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ApiusuarioService } from 'src/app/services/apiusuario.service';
 
 @Component({
   selector: 'app-crear-cuenta',
@@ -21,7 +22,7 @@ export class CrearCuentaPage implements OnInit {
   contra2: string = "";
 
   
-  constructor(private router: Router, private alertctrl: AlertController) { }
+  constructor(private router: Router, private alertctrl: AlertController, private usuarioService: ApiusuarioService) { }
 
   validarRut(rutCompleto: string): boolean {
   if (!rutCompleto) return false;
@@ -35,7 +36,7 @@ export class CrearCuentaPage implements OnInit {
   let dv = rutSplit[1];
 
   // Validar cuerpo del RUT
-  if (dv.length !== 1 && dv !== 'K') return false;
+  if (dv.length !== 1) return false;
   if (isNaN(Number(cuerpo))) return false;
 
   const rutNumerico = Number(cuerpo);
@@ -60,117 +61,77 @@ export class CrearCuentaPage implements OnInit {
 }
 
   async crearCuenta() {
-  const minLength = 8;
+    const minLength = 8;
 
-  // Verificar campos vacíos
-  if (!this.p_nombre || !this.p_apellido || !this.rut || !this.correo || !this.contra || !this.contra2) {
-    const alert = await this.alertctrl.create({
-      header: 'ERROR!',
-      message: 'Debes rellenar los campos obligatorios.',
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
+    if (!this.p_nombre || !this.p_apellido || !this.rut || !this.correo || !this.contra || !this.contra2) {
+      await this.presentAlert('ERROR!', 'Debes rellenar los campos obligatorios.');
+      return;
+    }
 
-  // Validar correo
-  const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.correo);
-  if (!correoValido) {
-    const alert = await this.alertctrl.create({
-      header: 'Correo inválido',
-      message: 'Por favor ingresa un correo válido.',
-      buttons: ['OK'],
-    });
-    await alert.present();
-    return;
-  }
+    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.correo);
+    if (!correoValido) {
+      await this.presentAlert('Correo inválido', 'Por favor ingresa un correo válido.');
+      return;
+    }
 
-  // Validar contraseña mínima longitud
-  if (this.contra.length < minLength) {
-    const alert = await this.alertctrl.create({
-      header: 'ERROR!',
-      message: `La contraseña debe tener al menos ${minLength} caracteres.`,
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
+    if (this.contra.length < minLength) {
+      await this.presentAlert('ERROR!', `La contraseña debe tener al menos ${minLength} caracteres.`);
+      return;
+    }
 
-  // Validar coincidencia de contraseñas
-  if (this.contra !== this.contra2) {
-    const alert = await this.alertctrl.create({
-      header: 'ERROR!',
-      message: `Las contraseñas deben ser iguales`,
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
+    if (this.contra !== this.contra2) {
+      await this.presentAlert('ERROR!', `Las contraseñas deben ser iguales.`);
+      return;
+    }
 
-  // Validar RUT chileno
-  if (!this.validarRut(this.rut)) {
-    const alert = await this.alertctrl.create({
-      header: 'RUT inválido',
-      message: 'Por favor ingresa un RUT válido con su dígito verificador, sin puntos.',
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
+    if (!this.validarRut(this.rut)) {
+      await this.presentAlert('RUT inválido', 'Por favor ingresa un RUT válido con su dígito verificador, sin puntos.');
+      return;
+    }
 
-  // Asignar nombre de usuario automático (puedes personalizarlo si quieres)
-  const usuarioAsignado = 'invitado';
+    const nuevoUsuario = {
+      rut: this.rut,
+      tipo_usuario: 'invitado',
+      p_nombre: this.p_nombre,
+      s_nombre: this.s_nombre,
+      p_apellido: this.p_apellido,
+      s_apellido: this.s_apellido,
+      direccion: this.direccion,
+      correo: this.correo,
+      contra: this.contra
+    };
 
-  // Obtener usuarios existentes
-  const usuariosGuardados = JSON.parse(localStorage.getItem('usuariosRegistrados') || '[]');
-
-  // Crear nuevo usuario
-  const nuevoUsuario = {
-    tipo_usuario: usuarioAsignado,
-    p_nombre: this.p_nombre,
-    s_nombre: this.s_nombre,
-    p_apellido: this.p_apellido,
-    s_apellido: this.s_apellido,
-    direccion: this.direccion,
-    rut: this.rut,
-    correo: this.correo,
-    contra: this.contra
-  };
-
-  // Verificar si el correo ya está registrado
-  const existeCorreo = usuariosGuardados.some((u: any) => u.correo === this.correo);
-  if (existeCorreo) {
-    const alert = await this.alertctrl.create({
-      header: 'Correo duplicado',
-      message: 'Este correo ya está registrado. Por favor usa otro.',
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
-
-  // Guardar usuario
-  usuariosGuardados.push(nuevoUsuario);
-  localStorage.setItem('usuariosRegistrados', JSON.stringify(usuariosGuardados));
-
-  const alert = await this.alertctrl.create({
-    header: 'Registro correcto!',
-    message: `La cuenta fue creada exitosamente`,
-    buttons: [{
-      text: 'OK',
-      handler: () => {
-        this.router.navigate(['/inicio']); // Redirige al login
+    this.usuarioService.agregarUsuario(nuevoUsuario).subscribe({
+      next: async (respuesta) => {
+        const alert = await this.alertctrl.create({
+          header: 'Registro correcto!',
+          message: 'La cuenta fue creada exitosamente.',
+          buttons: [{
+            text: 'OK',
+            handler: () => {
+              this.router.navigate(['/inicio']);
+            }
+          }]
+        });
+        await alert.present();
+      },
+      error: async (error) => {
+        await this.presentAlert('Error al registrar', error?.error?.message || 'No se pudo registrar el usuario.');
       }
-    }]
-  });
-  await alert.present();
-}
-
-  
-  
+    });
+  }
 
   IraInicio() {
-    this.router.navigate(['/inicio'])
+    this.router.navigate(['/inicio']);
+  }
+
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertctrl.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
   ngOnInit() {
