@@ -67,7 +67,7 @@ export class CarritoComprasPage implements OnInit {
 
   console.log('Datos enviados:', payload); // Útil para debugging
 
-  this.pedidoService.agregarPedido(payload).subscribe({
+  /*this.pedidoService.agregarPedido(payload).subscribe({
     next: async (response) => {
       console.log('Pedido creado:', response);
 
@@ -92,7 +92,7 @@ export class CarritoComprasPage implements OnInit {
       });
       await alert.present();
     }
-  });
+  });*/
 }
 
   ionViewWillEnter() {
