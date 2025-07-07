@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiproductoService} from 'src/app/services/apiproducto.service';
+import { ApiCarrito } from 'src/app/services/apicarrito.service';
 
 @Component({
   selector: 'app-iniciosin',
@@ -12,7 +13,9 @@ export class IniciosinPage implements OnInit {
 
   productos: any[] = [];
 
-  constructor(private router: Router, private productoService: ApiproductoService) { }
+  respuesta: any;
+
+  constructor(private router: Router, private productoService: ApiproductoService, private carritoService: ApiCarrito) { }
 
   irAInicioSesion() {
     this.router.navigate(['/inicio-sesion']);
@@ -40,6 +43,16 @@ export class IniciosinPage implements OnInit {
       },
       (error) => {
         console.error('Error al obtener productos', error);
+      }
+    );
+
+    this.carritoService.getDatos().subscribe(
+      data => {
+        this.respuesta = data;
+        console.log(data);
+      },
+      error => {
+        console.error('Error al llamar a la API:', error);
       }
     );
   }
