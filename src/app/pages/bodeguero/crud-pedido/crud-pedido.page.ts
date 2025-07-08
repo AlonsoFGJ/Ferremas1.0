@@ -53,7 +53,16 @@ export class CrudPedidoPage implements OnInit {
       this.router.navigate(['/iniciosin']);
       return;
     }
+    
+    const usuarioActualStr = JSON.parse(usuarioActual)
+    const usuarioNecesario = 'bodeguero'
+
+    if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+    // El tipo de usuario no coincide
+    this.router.navigate(['/iniciosin']); 
+    return;
   }
+}
 
   cargarPedidos() {
     // Datos de ejemplo - en producción vendrían de una API

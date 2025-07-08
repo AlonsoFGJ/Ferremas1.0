@@ -55,14 +55,14 @@ export class AdministrarPage implements OnInit {
     },
     error => {
       console.error('Error al obtener usuarios desde API', error);
-      this.mostrarAlerta('No se pudieron cargar los usuarios.');
+      this.mostrarAlerta('No se pudieron cargar los usuarios.', 'Error');
     }
   );
 }
 
-async mostrarAlerta(mensaje: string) {
+async mostrarAlerta(mensaje: string, header: string) {
   const alert = await this.alertCtrl.create({
-    header: 'Error',
+    header: header,
     message: mensaje,
     buttons: ['OK']
   });
@@ -72,6 +72,7 @@ async mostrarAlerta(mensaje: string) {
   
 
   ngOnInit() {
+  
   const usuarioActual = localStorage.getItem('usuarioActual');
   if (!usuarioActual) {
     this.router.navigate(['/iniciosin']);
@@ -80,6 +81,15 @@ async mostrarAlerta(mensaje: string) {
 
   const user = JSON.parse(usuarioActual);
   this.nombreUsuario = user.p_nombre || user.usuario;
+  
+  const usuarioActualStr = JSON.parse(usuarioActual)
+  const usuarioNecesario = 'admin'
+
+  if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+  // El tipo de usuario no coincide
+  this.router.navigate(['/iniciosin']); 
+  return;
+}
 
   this.cargarUsuariosDesdeAPI(); // <--- Aquí llamas la carga real desde la API
 }
@@ -177,26 +187,26 @@ async mostrarAlerta(mensaje: string) {
 
     this.usuarioService.actualizarParcial(rutUsuario, formValues).subscribe(
       async () => {
-        await this.mostrarAlerta('Usuario actualizado correctamente');
+        await this.mostrarAlerta('Usuario actualizado correctamente', 'Aviso');
         this.setOpen(false);
         this.cargarUsuariosDesdeAPI();
       },
       async (error) => {
         console.error('Error al actualizar usuario', error);
-        await this.mostrarAlerta('No se pudo actualizar el usuario.');
+        await this.mostrarAlerta('No se pudo actualizar el usuario.', 'Error');
       }
     );
   } else if (this.isEditing == false) {
     // ✨ Modo creación
     this.usuarioService.agregarUsuario(formValues).subscribe(
       async () => {
-        await this.mostrarAlerta('Usuario creado correctamente');
+        await this.mostrarAlerta('Usuario creado correctamente', 'Aviso');
         this.setOpen(false);
         this.cargarUsuariosDesdeAPI();
       },
       async (error) => {
         console.error('Error al crear usuario', error);
-        await this.mostrarAlerta('No se pudo crear el usuario.');
+        await this.mostrarAlerta('No se pudo crear el usuario.', 'Error');
       }
     );
   }
@@ -227,12 +237,12 @@ async mostrarAlerta(mensaje: string) {
   deleteUser(user: any) {
   this.usuarioService.eliminarUsuario(user.rut).subscribe(
     async () => {
-      await this.mostrarAlerta('Usuario eliminado correctamente.');
+      await this.mostrarAlerta('Usuario eliminado correctamente.', 'Aviso');
       this.cargarUsuariosDesdeAPI();
     },
     async (error) => {
       console.error('Error al eliminar usuario', error);
-      await this.mostrarAlerta('No se pudo eliminar el usuario.');
+      await this.mostrarAlerta('No se pudo eliminar el usuario.', 'Error');
     }
   );
 }

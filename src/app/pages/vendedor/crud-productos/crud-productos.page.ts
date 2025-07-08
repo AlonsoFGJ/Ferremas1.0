@@ -81,7 +81,24 @@ irAInicio() {
         console.error('Error al obtener productos', error);
       }
     );
+
+    const usuarioActual = localStorage.getItem('usuarioActual');
+  if (!usuarioActual) {
+    // Redirigir a /iniciosin si no hay sesión activa
+    this.router.navigate(['/iniciosin']);
+    return;
   }
+  const usuarioActualStr = JSON.parse(usuarioActual)
+  const usuarioNecesario = 'vendedor'
+
+  if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+  // El tipo de usuario no coincide
+  this.router.navigate(['/iniciosin']); 
+  return;
+}
+  }
+
+  
   
 
 async actualizarProducto(index: number) {

@@ -37,6 +37,7 @@ productos: any[] = [];
 
 
   ngOnInit() {
+    
     this.productoService.obtenerProductos().subscribe(
       (res) => {
         this.productos = res.slice(0, 5);
@@ -47,13 +48,22 @@ productos: any[] = [];
       }
     );
 
-
+    
     const usuarioActual = localStorage.getItem('usuarioActual');
   if (!usuarioActual) {
     // Redirigir a /iniciosin si no hay sesión activa
     this.router.navigate(['/iniciosin']);
     return;
   }
+
+  const usuarioActualStr = JSON.parse(usuarioActual)
+  const usuarioNecesario = 'admin'
+
+  if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+  // El tipo de usuario no coincide
+  this.router.navigate(['/iniciosin']); 
+  return;
+}
   }
 
 }

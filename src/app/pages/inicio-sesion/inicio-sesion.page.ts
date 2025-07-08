@@ -41,12 +41,7 @@ export class InicioSesionPage implements OnInit {
         console.error('Error al obtener usuarios', error);
       }
     );
-    
-
-
-  
-
-  
+  localStorage.removeItem('usuarioActual');
 }
 
 async iniciarSesion() {

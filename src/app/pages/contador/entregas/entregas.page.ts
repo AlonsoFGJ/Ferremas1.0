@@ -67,7 +67,16 @@ irAInicio() {
       this.router.navigate(['/iniciosin']);
       return;
     }
-  }
+
+    const usuarioActualStr = JSON.parse(usuarioActual)
+    const usuarioNecesario = 'contador'
+
+    if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+    // El tipo de usuario no coincide
+    this.router.navigate(['/iniciosin']); 
+    return;
+  }    
+}
 
   // Cambia el estado de entrega
   cambiarEstadoEntrega(index: number) {

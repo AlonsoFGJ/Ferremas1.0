@@ -95,6 +95,7 @@ export class PagoPage implements OnInit {
         onApprove: (data: any, actions: any) => {
           return actions.order.capture().then((details: any) => {
             alert('Pago realizado por ' + details.payer.name.given_name);
+            this.router.navigate(['/inicio'])
           });
         },
         onError: (err: any) => {

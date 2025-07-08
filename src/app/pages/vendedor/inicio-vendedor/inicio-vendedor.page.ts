@@ -54,6 +54,15 @@ export class InicioVendedorPage implements OnInit {
     this.router.navigate(['/iniciosin']);
     return;
   }
+
+  const usuarioActualStr = JSON.parse(usuarioActual)
+  const usuarioNecesario = 'vendedor'
+
+  if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
+  // El tipo de usuario no coincide
+  this.router.navigate(['/iniciosin']); 
+  return;
+}
   }
 
 }

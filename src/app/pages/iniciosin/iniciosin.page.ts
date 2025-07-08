@@ -46,6 +46,8 @@ export class IniciosinPage implements OnInit {
       }
     );
 
+    localStorage.removeItem('usuarioActual');
+
     this.carritoService.getDatos().subscribe(
       data => {
         this.respuesta = data;
