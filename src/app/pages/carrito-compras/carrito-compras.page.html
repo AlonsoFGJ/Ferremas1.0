@@ -7,7 +7,7 @@
       <span class="headerttl" (click)="irAInicio()">FERREMAS</span>      
     <div class="headerderecha">      
     <ion-button shape="round" class="headercrear">Usuario: {{ nombreUsuario }}</ion-button>
-    <ion-button shape="round" class="headercrear" href="/inicio">Cerrar sesión</ion-button>
+    <ion-button shape="round" class="headercrear" (click)="guardarCarrito(); cerrarSesion()">Cerrar sesión</ion-button>
     </div>
     </div>
   </ion-toolbar>
@@ -62,7 +62,7 @@
 
     <!-- Botón pagar -->
     <div class="boton-pagar" *ngIf="carrito.length > 0">
-      <ion-button expand="full" (click)="pagarCarrito()">Pagar carrito ({{ calcularTotal() | currency:'CLP' }})</ion-button>
+      <ion-button expand="full" (click)="pagarCarrito(); guardarCarrito()">Pagar carrito ({{ calcularTotal() | currency:'CLP' }})</ion-button>
     </div>
   </div>
 </ion-content>
