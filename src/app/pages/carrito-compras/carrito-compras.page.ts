@@ -5,6 +5,15 @@ import { CarritoService } from 'src/app/services/carrito.service';
 import { ApipedidoService } from 'src/app/services/apipedido.service';
 import { ApiCarrito } from 'src/app/services/apicarrito.service';
 import { ApiproductoService } from 'src/app/services/apiproducto.service';
+import { FormBuilder, FormGroup } from '@angular/forms'; 
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+interface Pedido {
+  id_pedido: number;
+  id_carrito: number;
+  pago_comprobado: string;
+}
 
 @Component({
   selector: 'app-carrito-compras',
@@ -19,6 +28,8 @@ export class CarritoComprasPage implements OnInit {
   nuevoPedido: any[] = []
   precioTotal: number = 0;
   carritoId: number = 0;
+  pedidosConDetalle: any[] = [];
+  mostrarPedidos: boolean = false;
 
   constructor(
     private router: Router, 
@@ -26,8 +37,38 @@ export class CarritoComprasPage implements OnInit {
     private carritoService: CarritoService,
     private pedidoService: ApipedidoService,
     private apiCarrito: ApiCarrito,
-    private productoService: ApiproductoService
+    private productoService: ApiproductoService,
+    private fb: FormBuilder
   ) { }
+
+  togglePedidos() {
+  this.mostrarPedidos = !this.mostrarPedidos;
+
+  if (this.mostrarPedidos && this.pedidosConDetalle.length === 0) {
+    const usuario = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
+    const rut = usuario.rut;
+
+    this.pedidoService.obtenerPedidoRut(rut).subscribe((pedidos: Pedido[]) => {
+      console.log('Pedidos recibidos:', pedidos);
+  const requests = pedidos.map((pedido: Pedido) =>
+    this.apiCarrito.getCarritoPorId(pedido.id_carrito).pipe(
+      map(carrito => ({
+        id_pedido: pedido.id_pedido,
+        pago_comprobado: pedido.pago_comprobado,
+        id_carrito: pedido.id_carrito,
+        descripcion_carrito: carrito.descripcion_carrito,
+        precio_total: carrito.precio_total,
+      }))
+    )
+  );
+
+      // Ejecutar todas las peticiones en paralelo
+      forkJoin(requests).subscribe((pedidosDetallados: any[]) => {
+  this.pedidosConDetalle = pedidosDetallados;
+});
+    });
+  }
+}
 
   private parseDescripcionCarrito(descripcion: string, productosApi: any[]): any[] {
   const items = descripcion.split(', ');

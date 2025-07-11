@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ApiCarrito {
   private apiUrl = 'http://localhost:8003/info_carritos'; // URL de tu API
+  private apiUrlAlt = 'http://localhost:8003/info_carrito';
   private apiKey = 'apikeysecreta123';
 
   constructor(private http: HttpClient) {}
@@ -26,6 +27,11 @@ export class ApiCarrito {
   // GET: Obtener un carrito por RUT
   getCarritoPorRut(rut: string): Observable<any> {
   return this.http.get(`${this.apiUrl}/${rut}`, { headers: this.getHeaders()});
+}
+
+// GET: Obtener un carrito por id
+  getCarritoPorId(id: number): Observable<any> {
+  return this.http.get(`${this.apiUrlAlt}/${id}`, { headers: this.getHeaders()});
 }
 
   // POST: Crear un nuevo carrito

@@ -18,6 +18,29 @@
     <h1>Carrito de compras</h1>
   </div>
 
+  <ion-button shape="round" color="medium" (click)="togglePedidos()">
+  {{ mostrarPedidos ? 'Ocultar pedidos' : 'Ver pedidos realizados' }}
+</ion-button>
+
+<div *ngIf="mostrarPedidos">
+  <h2>Pedidos Realizados</h2>
+
+  <ion-list *ngIf="pedidosConDetalle.length > 0">
+    <ion-item *ngFor="let pedido of pedidosConDetalle">
+      <ion-label>
+        <h3>Pedido</h3>
+        <p><strong>Descripción:</strong> {{ pedido.descripcion_carrito }}</p>
+        <p><strong>Total:</strong> {{ pedido.precio_total | currency:'CLP' }}</p>
+        <p><strong>Estado:</strong> {{ pedido.pago_comprobado }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div *ngIf="pedidosConDetalle.length === 0">
+    <p>No tienes pedidos registrados.</p>
+  </div>
+</div>
+
   <div class="carrito-box">
 
     <!-- Si el carrito está vacío -->

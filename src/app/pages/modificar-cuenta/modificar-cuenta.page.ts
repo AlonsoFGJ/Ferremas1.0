@@ -25,24 +25,44 @@ export class ModificarCuentaPage implements OnInit {
   contra: string = "";  
 
 
-  constructor(private router: Router, private alerctrl: AlertController, private usuarioService: ApiusuarioService) { }
+  constructor(private router: Router, private alertCtrl: AlertController, private usuarioService: ApiusuarioService) { }
 
-  async mostrarAlerta(mensaje: string) {
-  const alert = await this.alerctrl.create({
-    header: 'Éxito',
+  async mostrarAlerta(mensaje: string, header: string) {
+  const alert = await this.alertCtrl.create({
+    header: header,
     message: mensaje,
-    buttons: ['OK'],
+    buttons: ['OK']
   });
-
   await alert.present();
+}
+
+async mostrarConfirmacion(mensaje: string, header: string): Promise<boolean> {
+  return new Promise(async (resolve) => {
+    const alert = await this.alertCtrl.create({
+      header: header,
+      message: mensaje,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => resolve(false)
+        },
+        {
+          text: 'Eliminar',
+          handler: () => resolve(true)
+        }
+      ]
+    });
+    await alert.present();
+  });
 }
 
   actualizarUsuario() {
   const userData = localStorage.getItem('usuarioActual');
 
   if (!userData) {
-    console.error('No se encontró el usuario actual en localStorage');
-    this.mostrarAlerta('Error: No hay sesión iniciada.');
+    console.error('No se encontró el usuario actual en la base de datos');
+    this.mostrarAlerta('No hay sesión iniciada.', 'Error');
     return;
   }
 
@@ -73,11 +93,49 @@ export class ModificarCuentaPage implements OnInit {
 
       localStorage.setItem('usuarioActual', JSON.stringify(usuarioActualizado));
 
-      this.mostrarAlerta('Los datos han sido actualizados correctamente.');
+      this.mostrarAlerta('Los datos han sido actualizados correctamente.', 'Éxito');
     },
     (error) => {
       console.error('Error al actualizar el usuario en el servidor', error);
-      this.mostrarAlerta('Hubo un error al guardar los cambios. Inténtalo más tarde.');
+      this.mostrarAlerta('Hubo un error al guardar los cambios. Inténtalo más tarde.', 'Error');
+    }
+  );
+}
+
+async eliminarUsuario() {
+  const userData = localStorage.getItem('usuarioActual');
+
+  if (!userData) {
+    console.error('No se encontró el usuario actual en la base de datos');
+    this.mostrarAlerta('Error: No hay sesión iniciada.', 'Error');
+    return;
+  }
+
+  const usuarioActual = JSON.parse(userData);
+  const rutUsuario = usuarioActual.rut;
+
+  // Mostrar confirmación usando AlertController
+  const confirmado = await this.mostrarConfirmacion(
+    '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
+    'Confirmar eliminación'
+  );
+
+  if (!confirmado) return;
+
+  // Llamamos al servicio para eliminar en el backend
+  this.usuarioService.eliminarUsuario(rutUsuario).subscribe(
+    (res: any) => {
+      console.log('Usuario eliminado del servidor:', res);
+
+      localStorage.removeItem('usuarioActual');
+
+      this.mostrarAlerta('Tu cuenta ha sido eliminada exitosamente.', 'Éxito');
+
+      this.router.navigate(['/iniciosin']);
+    },
+    (error) => {
+      console.error('Error al eliminar el usuario en el servidor', error);
+      this.mostrarAlerta('Hubo un error al eliminar la cuenta. Inténtalo más tarde.', 'Error');
     }
   );
 }
@@ -129,7 +187,7 @@ irAInicio() {
       },
       (error) => {
         console.error('Error al obtener usuario por RUT', error);
-        this.mostrarAlerta('No se pudieron cargar los datos del usuario.');
+        this.mostrarAlerta('No se pudieron cargar los datos del usuario.', 'Error');
       }
     );
   } else {
@@ -138,7 +196,42 @@ irAInicio() {
   }
 }
 
-  ngOnInit() {
+async ngOnInit() {
+  const usuarioActual = localStorage.getItem('usuarioActual');
+
+  if (!usuarioActual) {
+    this.router.navigate(['/iniciosin']);
+    return;
   }
+
+  const usuarioActualStr = JSON.parse(usuarioActual);
+  const tipoUsuario = usuarioActualStr.tipo_usuario?.trim();
+
+  if (tipoUsuario == 'invitado') {
+    // Usuario válido, se queda en la vista
+    return;
+  } else if (tipoUsuario == 'vendedor') {
+    await this.mostrarAlerta(
+      'La cuenta de tipo "Vendedor" no está habilitada para modificar esta sección.',
+      'Acceso restringido'
+    );
+    this.router.navigate(['/inicio-vendedor']);
+  } else if (tipoUsuario == 'contador') {
+    await this.mostrarAlerta(
+      'La cuenta de tipo "Contador" no está habilitada para modificar esta sección.',
+      'Acceso restringido'
+    );
+    this.router.navigate(['/inicio-contadorro']);
+  } else if (tipoUsuario == 'bodega') {
+    await this.mostrarAlerta(
+      'La cuenta de tipo "Bodega" no está habilitada para modificar esta sección.',
+      'Acceso restringido'
+    );
+    this.router.navigate(['/inicio-bodeguero']);
+  } else {
+    // Tipo de usuario no reconocido
+    this.router.navigate(['/iniciosin']);
+  }
+}
 
 }

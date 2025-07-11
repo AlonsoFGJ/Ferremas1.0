@@ -22,6 +22,11 @@ export class ApipedidoService {
     return this.http.get(`${this.apiUrl}/${id_pedido}`);
   }
 
+  // GET pedido por RUT
+  obtenerPedidoRut(rut: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}/por-rut/${rut}`);
+  }
+
   // Búsqueda genérica (por rut_usuario o descripcion_carrito)
   buscarPedidos(termino: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/buscar/${termino}`);
