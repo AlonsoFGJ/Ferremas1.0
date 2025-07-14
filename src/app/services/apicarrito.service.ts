@@ -49,8 +49,15 @@ export class ApiCarrito {
     return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 
-  // PATCH: Actualización parcial del carrito
-  actualizarParcialCarrito(id: number, cambios: any): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}`, cambios, { headers: this.getHeaders() });
+  // DELETE: Eliminar un carrito por RUT
+  eliminarCarritoRut(rut: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/por-rut/${rut}`, { headers: this.getHeaders() });
   }
+
+  // PATCH: Actualización parcial del carrito
+  actualizarParcialCarrito(rut: string, cambios: any): Observable<any> {
+  return this.http.patch(`${this.apiUrl}/por-rut/${rut}`, cambios, {headers: this.getHeaders()});
+  }
+
+  
 }

@@ -30,6 +30,7 @@ export class CarritoComprasPage implements OnInit {
   carritoId: number = 0;
   pedidosConDetalle: any[] = [];
   mostrarPedidos: boolean = false;
+  rutUsuario: string = '';
 
   constructor(
     private router: Router, 
@@ -130,34 +131,8 @@ export class CarritoComprasPage implements OnInit {
     pago_comprobado: 'Pendiente'
   };
 
+  this.router.navigate(['/pago'])
   console.log('Datos enviados:', payload); // Útil para debugging
-
-  /*this.pedidoService.agregarPedido(payload).subscribe({
-    next: async (response) => {
-      console.log('Pedido creado:', response);
-
-      const alert = await this.alertCtrl.create({
-        header: 'Éxito',
-        message: 'Tu pedido ha sido enviado correctamente.',
-        buttons: ['OK']
-      });
-      await alert.present();
-      const id_pedido = response.id_pedido;
-
-      this.carritoService.vaciarCarrito();
-      this.router.navigate(['/pago'], { queryParams: { id_pedido } });
-    },
-    error: async (err) => {
-      console.error('Error al crear pedido:', err);
-
-      const alert = await this.alertCtrl.create({
-        header: 'Error',
-        message: 'Ocurrió un problema al procesar tu pedido.',
-        buttons: ['OK']
-      });
-      await alert.present();
-    }
-  });*/
 }
 
   ionViewWillEnter() {
@@ -265,7 +240,7 @@ parsearDescripcionADetalle(descripcion: string): { titulo: string, cantidad: num
         precio_total
       };
 
-      this.apiCarrito.actualizarParcialCarrito(id_carrito, carritoActualizado).subscribe({
+      this.apiCarrito.actualizarParcialCarrito(rut_usuario, carritoActualizado).subscribe({
         next: res => console.log('✅ Carrito actualizado:', res),
         error: err => console.error('❌ Error al actualizar carrito:', err)
       });
@@ -300,26 +275,36 @@ parsearDescripcionADetalle(descripcion: string): { titulo: string, cantidad: num
   // Eliminar producto del carrito local
   this.carrito.splice(index, 1);
 
-  // Reconstruir descripción y total
-  const descripcion_carrito = this.carrito
-    .map(p => `${p.titulo} x${p.cantidad}`)
-    .join(', ');
-
-  const precio_total = this.calcularTotal();
-
   // Obtener rut usuario actual
   const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
   const rut_usuario = usuarioActual.rut || 'SIN_RUT';
 
-  // Preparar objeto actualizado para la API
+  if (this.carrito.length === 0) {
+    // Si no quedan productos, eliminar el carrito de la API
+    this.apiCarrito.eliminarCarritoRut(rut_usuario).subscribe({
+      next: res => {
+        console.log('🗑️ Carrito eliminado correctamente:', res);
+      },
+      error: err => {
+        console.error('❌ Error al eliminar carrito:', err);
+      }
+    });
+    return;
+  }
+
+  // Si aún hay productos, reconstruir y actualizar
+  const descripcion_carrito = this.carrito
+    .map(p => `${p.titulo} x${p.cantidad}`)
+    .join(', ');
+  const precio_total = this.calcularTotal();
+
   const carritoActualizado = {
     rut_usuario,
     descripcion_carrito,
     precio_total
   };
 
-  // Llamar a la API para actualizar el carrito (PATCH)
-  this.apiCarrito.actualizarParcialCarrito(this.carritoId, carritoActualizado).subscribe({
+  this.apiCarrito.actualizarParcialCarrito(rut_usuario, carritoActualizado).subscribe({
     next: res => {
       console.log('✅ Producto eliminado y carrito actualizado:', res);
     },
@@ -367,7 +352,7 @@ parsearDescripcionADetalle(descripcion: string): { titulo: string, cantidad: num
   };
 
   // 🔁 Llamar a la API para actualizar
-  this.apiCarrito.actualizarParcialCarrito(this.carritoId, carritoActualizado).subscribe({
+  this.apiCarrito.actualizarParcialCarrito(rut_usuario, carritoActualizado).subscribe({
     next: res => console.log('✅ Carrito actualizado:', res),
     error: err => console.error('❌ Error al actualizar carrito:', err)
   });

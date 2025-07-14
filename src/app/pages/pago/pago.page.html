@@ -25,7 +25,7 @@
       <ion-card-title>Resumen de Pago</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Total en CLP:</strong> {{ totalCLP | currency:'CLP' }}</p>
+      <p><strong>Total (en CLP):</strong> {{ totalCLP | currency:'CLP' }}</p>
       <p><strong>Equivalente en dólares:</strong> {{ convertirPesosADolares(totalCLP) | currency:'USD':'symbol':'1.2-2' }}</p>
     </ion-card-content>
   </ion-card>

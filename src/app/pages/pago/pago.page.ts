@@ -2,6 +2,7 @@ import { Component, OnInit, AfterContentChecked } from '@angular/core';
 import { IndicadoresService } from 'src/app/services/indicadores.service';
 import { CarritoService } from 'src/app/services/carrito.service';
 import { ApipedidoService } from 'src/app/services/apipedido.service';
+import { ApiCarrito } from 'src/app/services/apicarrito.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -14,7 +15,10 @@ import { Router } from '@angular/router';
 })
 export class PagoPage implements OnInit {
   
-
+  descripcionPedido: string = '';
+  rutUsuario: string = '';
+  pedido: any = {};
+  idCarrito: any = {};
   valorDolar: number = 0;
   totalCLP: number= 0;
   carrito: any[] = [];
@@ -24,35 +28,44 @@ export class PagoPage implements OnInit {
     private CarritoService: CarritoService,
     private pedidoService: ApipedidoService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private apiCarrito: ApiCarrito
   ) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-    const id_pedido = params['id_pedido'];
+  // Obtener el RUT del usuario desde localStorage
+  const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
+  const rut = usuarioActual.rut;
 
-    if (id_pedido) {
-      this.pedidoService.obtenerPedido(id_pedido).subscribe(pedido => {
-        console.log('Datos recibidos:', pedido);
-
-      // Reasignamos los valores a sus campos correctos
-      const pedidoCorregido = {
-        id_pedido: pedido.id_pedido,
-        rut_usuario: pedido.descripcion_carrito, // Aquí estaba el RUT
-        descripcion_carrito: pedido.precio_total, // Aquí estaba la descripción
-        precio_total: Number(pedido.pago_comprobado), // Aquí estaba el total como número
-        pago_comprobado: pedido.pago_comprobado // Puede quedar así o manejarlo después
-  };
-
-  console.log('Pedido corregido:', pedidoCorregido);
-
-  this.totalCLP = pedidoCorregido.precio_total;
-      });
-    }
-  });
-    this.obtenerValorDolar();
-
+  if (!rut) {
+    console.error('No se encontró el RUT del usuario en localStorage');
+    return;
   }
+
+  // Obtener el carrito asociado al RUT usando apiCarrito
+  this.apiCarrito.getCarritoPorRut(rut).subscribe(carrito => {
+    console.log('Carrito obtenido:', carrito);
+
+    // Guardar los datos recuperados en variables locales
+    this.idCarrito = carrito.id_carrito;
+    this.descripcionPedido = carrito.descripcion_carrito; // Asegúrate de que el nombre sea correcto
+    this.rutUsuario = carrito.rut_usuario; // O directamente usar "rut"
+    this.totalCLP = carrito.precio_total;  // Si deseas mostrar el total
+
+    // También puedes preparar el objeto del pedido por adelantado si lo necesitas
+    this.pedido = {
+      descripcion_pedido: this.descripcionPedido,
+      rut_usuario: this.rutUsuario,
+      pago_comprobado: 'Pendiente'
+    };
+
+  }, error => {
+    console.error('Error al obtener carrito por RUT:', error);
+  });
+
+  // Obtener valor dólar si es necesario para conversión
+  this.obtenerValorDolar();
+}
 
   obtenerValorDolar() {
     this.indicadoresService.getDolar().subscribe({
@@ -95,7 +108,59 @@ export class PagoPage implements OnInit {
         onApprove: (data: any, actions: any) => {
           return actions.order.capture().then((details: any) => {
             alert('Pago realizado por ' + details.payer.name.given_name);
-            this.router.navigate(['/inicio'])
+
+            // 1. Obtener usuario actual y su RUT
+            const usuarioActual = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
+            const rutUsuario = usuarioActual.rut;
+
+            if (!rutUsuario) {
+              console.error('No se encontró el RUT del usuario');
+              return;
+            }
+
+            // 2. Obtener carrito por RUT
+            this.apiCarrito.getCarritoPorRut(rutUsuario).subscribe(carrito => {
+              console.log('Carrito recuperado:', carrito);
+
+              // 3. Armar objeto para el pedido
+              const nuevoPedido = {
+                descripcion_pedido: carrito.descripcion_carrito, // Puede ajustarse según nombre exacto del campo
+                rut_usuario: carrito.rut_usuario,
+                pago_comprobado: 'Pendiente'
+              };
+
+              // 4. Crear pedido con API
+              this.apiCarrito.eliminarCarritoRut(rutUsuario).subscribe({
+                next: () => {
+                  console.log('Carrito eliminado del backend');
+
+                  this.CarritoService.vaciarCarrito(); // ✅ Ahora sí se ejecuta el método
+                  console.log('Carrito local vaciado');
+
+                  this.pedidoService.agregarPedido(nuevoPedido).subscribe(res => {
+                    console.log('Pedido agregado:', res);
+                    this.router.navigate(['/inicio']);
+                  }, err => {
+                    console.error('Error al agregar pedido:', err);
+                  });
+
+                },
+                error: err => {
+                  console.error('Error al eliminar carrito:', err);    
+                }
+              });
+
+              this.pedidoService.agregarPedido(nuevoPedido).subscribe(res => {
+                console.log('Pedido agregado:', res);
+      
+                this.router.navigate(['/inicio']);
+              }, err => {
+                console.error('Error al agregar pedido:', err);
+              });
+
+            }, error => {
+              console.error('Error al obtener carrito:', error);
+            });
           });
         },
         onError: (err: any) => {

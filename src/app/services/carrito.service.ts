@@ -16,6 +16,10 @@ export class CarritoService {
 
   constructor(private apiCarrito: ApiCarrito) {}
 
+  get apiCarritos() {
+    return this.apiCarrito;
+  }
+
   // Método para obtener el valor actual del carrito
   private get carritoActual(): any[] {
     return this.carritoSubject.getValue();
@@ -61,7 +65,7 @@ export class CarritoService {
           precio_total
         };
 
-        this.apiCarrito.actualizarParcialCarrito(carritoUsuario.id_carrito, datosActualizar).subscribe(() => {
+        this.apiCarrito.actualizarParcialCarrito(rut_usuario, datosActualizar).subscribe(() => {
           console.log('Carrito actualizado en API');
         });
 

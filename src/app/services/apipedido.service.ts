@@ -41,9 +41,8 @@ export class ApipedidoService {
   actualizarPedido(id_pedido: number, pedido: any): Observable<any> {
     let params = new HttpParams()
       .set('id_pedido', id_pedido)
-      .set('rut_usuario', pedido.rut_usuario)
       .set('descripcion_carrito', pedido.descripcion_carrito)
-      .set('precio_total', pedido.precio_total)
+      .set('rut_usuario', pedido.rut_usuario)
       .set('pago_comprobado', pedido.pago_comprobado);
 
     return this.http.put(`${this.apiUrl}/${id_pedido}`, null, { params });
