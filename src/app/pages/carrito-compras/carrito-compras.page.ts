@@ -49,27 +49,25 @@ export class CarritoComprasPage implements OnInit {
     const usuario = JSON.parse(localStorage.getItem('usuarioActual') || '{}');
     const rut = usuario.rut;
 
-    this.pedidoService.obtenerPedidoRut(rut).subscribe((pedidos: Pedido[]) => {
-      console.log('Pedidos recibidos:', pedidos);
-  const requests = pedidos.map((pedido: Pedido) =>
-    this.apiCarrito.getCarritoPorId(pedido.id_carrito).pipe(
-      map(carrito => ({
-        id_pedido: pedido.id_pedido,
-        pago_comprobado: pedido.pago_comprobado,
-        id_carrito: pedido.id_carrito,
-        descripcion_carrito: carrito.descripcion_carrito,
-        precio_total: carrito.precio_total,
-      }))
-    )
-  );
+    if (!rut) {
+      console.error('No se encontró el RUT del usuario');
+      return;
+    }
 
-      // Ejecutar todas las peticiones en paralelo
-      forkJoin(requests).subscribe((pedidosDetallados: any[]) => {
-  this.pedidosConDetalle = pedidosDetallados;
-});
+    this.pedidoService.obtenerPedidoRut(rut).subscribe((pedidos: any[]) => {
+      console.log('Pedidos recibidos:', pedidos);
+
+      // Filtramos solo los campos necesarios
+      this.pedidosConDetalle = pedidos.map(p => ({
+        id_pedido: p.id_pedido,
+        descripcion_pedido: p.descripcion_pedido
+      }));
+    }, error => {
+      console.error('Error al obtener pedidos:', error);
     });
   }
 }
+
 
   private parseDescripcionCarrito(descripcion: string, productosApi: any[]): any[] {
   const items = descripcion.split(', ');

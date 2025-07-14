@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { ApipedidoService } from 'src/app/services/apipedido.service';
+import { ApiusuarioService } from 'src/app/services/apiusuario.service';
 
 @Component({
   selector: 'app-entregas',
@@ -11,35 +13,34 @@ import { AlertController } from '@ionic/angular';
 export class EntregasPage implements OnInit {
   nombreUsuario: string = '';
   fechaActual: Date = new Date();
-  usuarioActual: any = null;
-  
-  // Datos de ejemplo para las entregas
-  entregas = [
-    { nombre: 'Juan Pérez', producto: 'Martillo', cantidad: 2, monto: 15000, entregado: false, pagado: true },
-    { nombre: 'María González', producto: 'Destornilladores', cantidad: 5, monto: 25000, entregado: true, pagado: true },
-    { nombre: 'Carlos López', producto: 'Pintura', cantidad: 3, monto: 35000, entregado: true, pagado: false },
-    { nombre: 'Ana Silva', producto: 'Clavos', cantidad: 100, monto: 5000, entregado: false, pagado: false }
-  ];
+  entregas: any[] = [];
 
-  private usuariosPredefinidos = [
-    { usuario: 'admin', contrasenia: 'admin123' },
-    { usuario: 'vendedor', contrasenia: 'vendedor123' },
-    { usuario: 'contador', contrasenia: 'contador123' },
-    { usuario: 'bodega', contrasenia: 'bodega1234' },
-    { usuario: 'invitado', contrasenia: 'invitado123' }
-  ];
+  constructor(
+    private router: Router,
+    private alertctrl: AlertController,
+    private apiPedido: ApipedidoService,
+    private apiUsuario: ApiusuarioService
+  ) {}
 
-  constructor(private router: Router, private alertctrl: AlertController) { }
-
-  ionViewWillEnter() {
-    const userData = localStorage.getItem('usuarioActual');
-    if (userData) {
-      const user = JSON.parse(userData);
-      this.nombreUsuario = user.usuario;
+  ngOnInit() {
+    const usuarioActual = localStorage.getItem('usuarioActual');
+    if (!usuarioActual) {
+      this.router.navigate(['/iniciosin']);
+      return;
     }
+
+    const usuarioActualStr = JSON.parse(usuarioActual);
+    this.nombreUsuario = usuarioActualStr.usuario;
+
+    if (usuarioActualStr.tipo_usuario !== 'contador') {
+      this.router.navigate(['/iniciosin']);
+      return;
+    }
+
+    this.cargarEntregas();
   }
 
-irAInicio() {
+  irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
   
   if (usuarioActual) {
@@ -61,61 +62,74 @@ irAInicio() {
   }
 }
 
-  ngOnInit() {
-    const usuarioActual = localStorage.getItem('usuarioActual');
-    if (!usuarioActual) {
-      this.router.navigate(['/iniciosin']);
-      return;
+  async cargarEntregas() {
+    try {
+      const pedidos = await this.apiPedido.obtenerPedidos().toPromise();
+
+      this.entregas = await Promise.all(
+        pedidos.map(async (pedido: any) => {
+          const rut = pedido.rut_usuario;
+          const usuario = await this.apiUsuario.obtenerUsuario(rut).toPromise();          
+          return {
+            id: pedido.id_pedido,
+            nombre: `${usuario.p_nombre} ${usuario.p_apellido}`,
+            descripcion: pedido.descripcion_pedido,
+            pagado: pedido.pago_comprobado,
+            rut: rut
+          };
+          
+        })
+      );
+      console.log('Datos de entregas:', this.entregas); // Agregar esta línea
+    } catch (error) {
+      console.error('Error cargando entregas:', error);
     }
+  }
 
-    const usuarioActualStr = JSON.parse(usuarioActual)
-    const usuarioNecesario = 'contador'
+  
 
-    if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
-    // El tipo de usuario no coincide
-    this.router.navigate(['/iniciosin']); 
-    return;
-  }    
+ togglePagoConfirmado(pedido: any) {
+  if (pedido.pagado === 'Pendiente') {
+    pedido.pagado = 'Confirmado';
+    pedido.modificado = true; // Marca el pedido como modificado
+  }
 }
 
-  // Cambia el estado de entrega
-  cambiarEstadoEntrega(index: number) {
-    this.entregas[index].entregado = !this.entregas[index].entregado;
+  // Confirma los cambios a la API
+  confirmarCambios() {
+  const cambiosPendientes = this.entregas.filter(p => p.modificado);
+
+  if (cambiosPendientes.length === 0) {
+    this.alertctrl.create({
+      header: 'Sin cambios',
+      message: 'No hay cambios pendientes por confirmar.',
+      buttons: ['OK']
+    }).then(alert => alert.present());
+    return;
   }
 
-  // Cambia el estado de pago
-  cambiarEstadoPago(index: number) {
-    this.entregas[index].pagado = !this.entregas[index].pagado;
-  }
-
-  // Calcula el monto total de todas las entregas
-  get montoTotal(): number {
-    return this.entregas.reduce((total, entrega) => total + entrega.monto, 0);
-  }
-
-  // Calcula el monto pagado
-  get montoPagado(): number {
-    return this.entregas
-      .filter(entrega => entrega.pagado)
-      .reduce((total, entrega) => total + entrega.monto, 0);
-  }
-
-  // Cuenta las entregas completadas
-  get entregasCompletadas(): number {
-    return this.entregas.filter(entrega => entrega.entregado).length;
-  }
-
-  // Función para simular la descarga del documento
-  async descargarDocumento() {
-    const alert = await this.alertctrl.create({
-      header: 'Descargar Documento',
-      message: 'El documento de entrega se ha generado correctamente.',
-      buttons: ['Aceptar']
+  cambiosPendientes.forEach(pedido => {
+    this.apiPedido.actualizarParcialPedido(pedido.id, {
+      pago_comprobado: pedido.pagado // Asegúrate de usar el campo correcto
+    }).subscribe({
+      next: () => {
+        pedido.modificado = false; // Limpiar el flag después de guardar
+      },
+      error: (err) => {
+        console.error(`Error actualizando pedido ${pedido.id}:`, err);
+      }
     });
-    
-    await alert.present();
-    
-    // Aquí iría la lógica real para generar y descargar el documento
-    console.log('Documento descargado');
-  }
+  });
+
+  this.alertctrl.create({
+    header: 'Cambios confirmados',
+    message: 'Se han aplicado los cambios correctamente.',
+    buttons: ['OK']
+  }).then(alert => alert.present());
+}
+
+tienePagosPendientes(): boolean {
+  return this.entregas.some(p => p.pagado === 'Pendiente');
+}
+
 }

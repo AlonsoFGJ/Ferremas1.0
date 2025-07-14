@@ -2,15 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+interface UltimoIdResponse {
+  ultimo_id: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class ApipedidoService {
 
   private apiUrl = 'http://127.0.0.1:8002/pedido';
 
   constructor(private http: HttpClient) {}
+
+  
 
   // GET todos los pedidos
   obtenerPedidos(): Observable<any> {
@@ -25,6 +32,11 @@ export class ApipedidoService {
   // GET pedido por RUT
   obtenerPedidoRut(rut: any): Observable<any> {
     return this.http.get(`${this.apiUrl}/por-rut/${rut}`);
+  }
+
+  // GET ultima id registrada en pedidos
+  obtenerUltimoIdPedido(): Observable<UltimoIdResponse> {
+    return this.http.get<UltimoIdResponse>(`${this.apiUrl}/ultimo-id`);    
   }
 
   // Búsqueda genérica (por rut_usuario o descripcion_carrito)
@@ -49,18 +61,9 @@ export class ApipedidoService {
   }
 
   // PATCH actualizar parcialmente un pedido
-  actualizarParcialPedido(id_pedido: number, datos: any): Observable<any> {
-    let params = new HttpParams();
-
-    for (const key of Object.keys(datos)) {
-      if (datos[key] !== undefined && datos[key] !== null) {
-        params = params.set(key, datos[key]);
-      }
-    }
-
-    return this.http.patch(`${this.apiUrl}/${id_pedido}`, null, { params });
-  }
-
+  actualizarParcialPedido(id: number, data: any, options?: any): Observable<any> {
+  return this.http.patch(`${this.apiUrl}/${id}`, data, options);
+}
   // DELETE eliminar pedido
   eliminarPedido(id_pedido: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id_pedido}`);

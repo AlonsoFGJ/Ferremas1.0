@@ -28,10 +28,8 @@
   <ion-list *ngIf="pedidosConDetalle.length > 0">
     <ion-item *ngFor="let pedido of pedidosConDetalle">
       <ion-label>
-        <h3>Pedido</h3>
-        <p><strong>Descripción:</strong> {{ pedido.descripcion_carrito }}</p>
-        <p><strong>Total:</strong> {{ pedido.precio_total | currency:'CLP' }}</p>
-        <p><strong>Estado:</strong> {{ pedido.pago_comprobado }}</p>
+        <h3>Pedido ID: {{ pedido.id_pedido }}</h3>
+        <p><strong>Descripción:</strong> {{ pedido.descripcion_pedido }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
@@ -40,6 +38,7 @@
     <p>No tienes pedidos registrados.</p>
   </div>
 </div>
+
 
   <div class="carrito-box">
 

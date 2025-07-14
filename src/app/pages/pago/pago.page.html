@@ -25,8 +25,9 @@
       <ion-card-title>Resumen de Pago</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Total (en CLP):</strong> {{ totalCLP | currency:'CLP' }}</p>
+      <p><strong>Total (en CLP, IVA incluido):</strong> {{ totalCLP | currency:'CLP' }}</p>
       <p><strong>Equivalente en dólares:</strong> {{ convertirPesosADolares(totalCLP) | currency:'USD':'symbol':'1.2-2' }}</p>
+      <p><strong>Detalle de compra:</strong> {{ descripcionPedido }}</p>
     </ion-card-content>
   </ion-card>
 
@@ -41,8 +42,9 @@
         <p><strong>Banco:</strong> BancoEstado</p>
         <p><strong>Tipo:</strong> Cuenta VISTA</p>
         <p><strong>N° Cuenta:</strong> 00021243823</p>
+        <p><strong>ATENCION! Debe enviar comprobante junto con el codigo de su pedido que será:</strong> {{ siguienteIdPedido }}</p>
       </div>
-      <a href="https://wa.me/56948055472" target="_blank" class="btn-whatsapp">
+      <a href="https://wa.me/56948055472" target="_blank" class="btn-whatsapp" (click)="crearPedido()">
         Enviar comprobante vía WhatsApp
       </a>
     </ion-card-content>

@@ -27,6 +27,22 @@ export class CrudProductosPage implements OnInit {
     'made': 'Madera'
   };
 
+  nuevoProducto: {
+  id_producto: number | null,
+  titulo: string,
+  descripcion: string,
+  stock: number,
+  precio: number,
+  tipo: string
+} = {
+  id_producto: null,
+  titulo: '',
+  descripcion: '',
+  stock: 0,
+  precio: 0,
+  tipo: 'herr'
+};
+
 
 irAInicio() {
   const usuarioActual = localStorage.getItem('usuarioActual');
@@ -55,6 +71,89 @@ irAInicio() {
     
     this.cargarProductos();
   }
+
+  agregarProducto() {
+  if (!this.nuevoProducto.titulo || this.nuevoProducto.precio <= 0 || this.nuevoProducto.stock < 0) {
+    this.alertCtrl.create({
+      header: 'Error',
+      message: 'Todos los campos obligatorios deben completarse correctamente.',
+      buttons: ['OK']
+    }).then(a => a.present());
+    return;
+  }
+
+  // 🆕 Generar nuevo id_producto = máximo existente + 1
+  const maxId = Math.max(...this.productos.map(p => p.id_producto), 0);
+  this.nuevoProducto.id_producto = maxId + 1;
+
+  this.productoService.agregarProducto(this.nuevoProducto).subscribe(
+    async () => {
+      this.cargarProductos(); // Refresca la lista
+      this.nuevoProducto = {
+        id_producto: null,
+        titulo: '',
+        descripcion: '',
+        stock: 0,
+        precio: 0,
+        tipo: 'herr'
+      };
+      const success = await this.alertCtrl.create({
+        header: 'Éxito',
+        message: 'Producto agregado exitosamente.',
+        buttons: ['OK']
+      });
+      await success.present();
+    },
+    async () => {
+      const error = await this.alertCtrl.create({
+        header: 'Error',
+        message: 'Error al agregar el producto.',
+        buttons: ['OK']
+      });
+      await error.present();
+    }
+  );
+}
+
+
+
+
+  async eliminarProducto(id: number, titulo: string) {
+    const confirmAlert = await this.alertCtrl.create({
+      header: 'Confirmar Eliminación',
+      message: `¿Está seguro que desea eliminar el producto ${titulo}?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.productoService.eliminarProducto(id).subscribe(
+              async () => {
+                this.cargarProductos();
+                const successAlert = await this.alertCtrl.create({
+                  header: 'Eliminado',
+                  message: 'Producto eliminado correctamente.',
+                  buttons: ['OK']
+                });
+                await successAlert.present();
+              },
+              async () => {
+                const errorAlert = await this.alertCtrl.create({
+                  header: 'Error',
+                  message: 'No se pudo eliminar el producto.',
+                  buttons: ['OK']
+                });
+                await errorAlert.present();
+              }
+            );
+          }
+        }
+      ]
+    });
+
+    await confirmAlert.present();
+  }
+
 
   cargarProductos() {
     this.productoService.obtenerProductos().subscribe(data => {
@@ -112,6 +211,18 @@ async actualizarProducto(index: number) {
     message: `precio: $${producto.precio.toLocaleString('es-CL')} stock: ${producto.stock}`,
     inputs: [
       {
+        name: 'titulo',
+        type: 'text',
+        placeholder: 'Título del producto',
+        value: producto.titulo || ''
+      },
+      {
+        name: 'descripcion',
+        type: 'text',
+        placeholder: 'Descripción',
+        value: producto.descripcion || ''
+      },
+      {
         name: 'stock',
         type: 'number',
         placeholder: 'Stock disponible',
@@ -137,10 +248,11 @@ async actualizarProducto(index: number) {
       {
         text: 'Guardar',
         handler: async (data) => {
+          const nuevoTitulo = data.titulo?.trim();
+          const nuevaDescripcion = data.descripcion?.trim();
           const nuevoStock = Number(data.stock);
           const nuevoPrecio = Number(data.precio);
 
-          // Validaciones
           if (nuevoStock < 0 || nuevoPrecio < 0) {
             const errorAlert = await this.alertCtrl.create({
               header: 'Error',
@@ -151,8 +263,10 @@ async actualizarProducto(index: number) {
             return false;
           }
 
-          if (nuevoStock >= 0 && nuevoPrecio > 0) {
+          if (nuevoStock >= 0 && nuevoPrecio > 0 && nuevoTitulo) {
             // Actualiza localmente
+            producto.titulo = nuevoTitulo;
+            producto.descripcion = nuevaDescripcion;
             producto.stock = nuevoStock;
             producto.precio = nuevoPrecio;
             producto.subtitulo = `$${producto.precio.toLocaleString('es-CL')}`;
@@ -160,14 +274,13 @@ async actualizarProducto(index: number) {
               producto.subtitulo += ' c/u';
             }
 
-            // 🔁 Actualiza en la base de datos
             try {
               await this.productoService.actualizarParcial(producto.id_producto, {
                 titulo: producto.titulo,
-                descripcion: producto.descripcion ?? '', // fallback en caso de que no exista
+                descripcion: producto.descripcion ?? '',
                 stock: producto.stock,
                 precio: producto.precio,
-                tipo: producto.tipo ?? '' // opcionalmente maneja campos no definidos
+                tipo: producto.tipo ?? ''
               }).toPromise();
 
               const successAlert = await this.alertCtrl.create({
@@ -177,7 +290,7 @@ async actualizarProducto(index: number) {
               });
               await successAlert.present();
 
-              return true;              
+              return true;
             } catch (error) {
               const errorAlert = await this.alertCtrl.create({
                 header: 'Error',
@@ -197,4 +310,5 @@ async actualizarProducto(index: number) {
 
   await alert.present();
 }
+
 }

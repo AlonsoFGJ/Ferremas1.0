@@ -54,7 +54,7 @@ export class InicioBodegueroPage implements OnInit {
   }
 
   const usuarioActualStr = JSON.parse(usuarioActual)
-  const usuarioNecesario = 'bodeguero'
+  const usuarioNecesario = 'bodega'
 
   if (usuarioActualStr.tipo_usuario !== usuarioNecesario) {
   // El tipo de usuario no coincide

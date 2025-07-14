@@ -63,8 +63,38 @@ export class CrearCuentaPage implements OnInit {
   async crearCuenta() {
     const minLength = 8;
 
-    if (!this.p_nombre || !this.p_apellido || !this.rut || !this.correo || !this.contra || !this.contra2) {
+    /*if (!this.p_nombre || !this.p_apellido || !this.rut || !this.correo || !this.contra || !this.contra2) {
       await this.presentAlert('ERROR!', 'Debes rellenar los campos obligatorios.');
+      return;
+    }*/
+
+    if (!this.p_nombre) {
+      await this.presentAlert('ERROR!', 'Debes ingresar un nombre');
+      return;
+    }
+
+    if (!this.p_apellido) {
+      await this.presentAlert('ERROR!', 'Debes ingresar un apellido');
+      return;
+    }
+
+    if (!this.rut) {
+      await this.presentAlert('ERROR!', 'Debes ingresar un RUT');
+      return;
+    }
+
+    if (!this.correo) {
+      await this.presentAlert('ERROR!', 'Debes ingresar un correo valido');
+      return;
+    }
+
+    if (!this.contra) {
+      await this.presentAlert('ERROR!', 'Debes ingresar una contraseña');
+      return;
+    }
+
+    if (!this.contra) {
+      await this.presentAlert('ERROR!', 'Debes ingresar una confirmación de contraseña');
       return;
     }
 

@@ -30,6 +30,38 @@
     <h1>Gestionar Productos</h1>
   </div>  
 
+  <div class="agregar-producto-form">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Agregar Nuevo Producto</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p style="color: white;">Titulo:</p>
+      <ion-input [(ngModel)]="nuevoProducto.titulo" required></ion-input>
+      <p style="color: white;">Descripción:</p>
+      <ion-input [(ngModel)]="nuevoProducto.descripcion"></ion-input>
+      <p style="color: white;">Stock:</p>
+      <ion-input type="number" [(ngModel)]="nuevoProducto.stock" required></ion-input>
+      <p style="color: white;">Precio:</p>
+      <ion-input type="number" [(ngModel)]="nuevoProducto.precio" required></ion-input>
+
+      <ion-item>
+        <ion-label>Tipo</ion-label>
+        <ion-select [(ngModel)]="nuevoProducto.tipo">
+          <ion-select-option value="herr">Herramientas</ion-select-option>
+          <ion-select-option value="mate">Materiales</ion-select-option>
+          <ion-select-option value="mad">Madera</ion-select-option>
+          <ion-select-option value="pint">Pinturas</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" (click)="agregarProducto()">Agregar Producto</ion-button>
+    </ion-card-content>
+  </ion-card>
+</div>
+
+
   <div class="card-grid">
     <ion-card *ngFor="let producto of productos; let i = index" class="producto-card">
       <ion-img [src]="'assets/icon/' + producto.titulo + '.png'" class="producto-img"></ion-img>
@@ -53,6 +85,14 @@
           <ion-icon name="create-outline" slot="start"></ion-icon>
           Editar
         </ion-button>
+        <ion-button 
+          expand="block" 
+          color="danger" 
+          (click)="eliminarProducto(producto.id_producto, producto.titulo)" 
+          class="delete-button">
+          <ion-icon name="trash-outline" slot="start"></ion-icon>
+          Eliminar
+      </ion-button>
       </ion-card-content>
     </ion-card>
   </div>
